@@ -1,0 +1,1 @@
+nohup java -jar ruoyi-admin.jar --spring.profiles.active=prod &
