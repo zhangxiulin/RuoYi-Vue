@@ -112,6 +112,8 @@ public class VelocityUtils
         templates.add("vm/xml/mapper.xml.vm");
         templates.add("vm/sql/sql.vm");
         templates.add("vm/js/api.js.vm");
+        templates.add("vm/java/mapperAuto.java.vm");
+        templates.add("vm/xml/mapperAuto.xml.vm");
         if (GenConstants.TPL_CRUD.equals(tplCategory))
         {
             templates.add("vm/vue/index.vue.vm");
@@ -151,6 +153,10 @@ public class VelocityUtils
         {
             fileName = StringUtils.format("{}/mapper/{}Mapper.java", javaPath, className);
         }
+        else if (template.contains("mapperAuto.java.vm"))
+        {
+            fileName = StringUtils.format("{}/mapper/{}MapperAuto.java", javaPath, className);
+        }
         else if (template.contains("service.java.vm"))
         {
             fileName = StringUtils.format("{}/service/I{}Service.java", javaPath, className);
@@ -166,6 +172,10 @@ public class VelocityUtils
         else if (template.contains("mapper.xml.vm"))
         {
             fileName = StringUtils.format("{}/{}Mapper.xml", mybatisPath, className);
+        }
+        else if (template.contains("mapperAuto.xml.vm"))
+        {
+            fileName = StringUtils.format("{}/{}MapperAuto.xml", mybatisPath, className);
         }
         else if (template.contains("sql.vm"))
         {

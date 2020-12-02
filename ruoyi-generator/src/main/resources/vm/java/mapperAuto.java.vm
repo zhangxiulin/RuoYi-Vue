@@ -4,12 +4,14 @@ import java.util.List;
 import ${packageName}.domain.${ClassName};
 
 /**
- * ${functionName}Mapper接口
- * 
+ * ${functionName}MapperAuto接口
+ *
+ * 由代码生成器产生，为适应表结构变化，请勿修改
+ *
  * @author ${author}
  * @date ${datetime}
  */
-public interface ${ClassName}Mapper 
+public interface ${ClassName}MapperAuto
 {
     /**
      * 查询${functionName}

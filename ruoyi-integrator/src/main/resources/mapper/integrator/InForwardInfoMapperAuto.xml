@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.integrator.mapper.InForwardInfoMapper">
+    
+    <resultMap type="InForwardInfo" id="InForwardInfoResult">
+        <result property="infoId"    column="info_id"    />
+        <result property="forwardName"    column="forward_name"    />
+        <result property="forwardCode"    column="forward_code"    />
+        <result property="isAsync"    column="is_async"    />
+        <result property="forwardProtocol"    column="forward_protocol"    />
+        <result property="forwardType"    column="forward_type"    />
+        <result property="forwardUrl"    column="forward_url"    />
+        <result property="forwardMethod"    column="forward_method"    />
+        <result property="forwardSql"    column="forward_sql"    />
+        <result property="forwardDatasource"    column="forward_datasource"    />
+        <result property="forwardVar"    column="forward_var"    />
+        <result property="isPreparedStatement"    column="is_prepared_statement"    />
+        <result property="rtStatusOk"    column="rt_status_ok"    />
+        <result property="rtStatusError"    column="rt_status_error"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectInForwardInfoVo">
+        select info_id, forward_name, forward_code, is_async, forward_protocol, forward_type, forward_url, forward_method, forward_sql, forward_datasource, forward_var, is_prepared_statement, rt_status_ok, rt_status_error, status, remark, create_by, create_time, update_by, update_time from in_forward_info
+    </sql>
+
+    <select id="selectInForwardInfoList" parameterType="InForwardInfo" resultMap="InForwardInfoResult">
+        <include refid="selectInForwardInfoVo"/>
+        <where>  
+            <if test="forwardName != null  and forwardName != ''"> and forward_name like concat('%', #{forwardName}, '%')</if>
+            <if test="forwardCode != null  and forwardCode != ''"> and forward_code = #{forwardCode}</if>
+            <if test="forwardProtocol != null  and forwardProtocol != ''"> and forward_protocol = #{forwardProtocol}</if>
+            <if test="forwardType != null  and forwardType != ''"> and forward_type = #{forwardType}</if>
+            <if test="forwardUrl != null  and forwardUrl != ''"> and forward_url like concat('%', #{forwardUrl}, '%')</if>
+            <if test="forwardSql != null  and forwardSql != ''"> and forward_sql like concat('%', #{forwardSql}, '%')</if>
+            <if test="forwardDatasource != null  and forwardDatasource != ''"> and forward_datasource = #{forwardDatasource}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectInForwardInfoById" parameterType="String" resultMap="InForwardInfoResult">
+        <include refid="selectInForwardInfoVo"/>
+        where info_id = #{infoId}
+    </select>
+        
+    <insert id="insertInForwardInfo" parameterType="InForwardInfo">
+        insert into in_forward_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="infoId != null">info_id,</if>
+            <if test="forwardName != null and forwardName != ''">forward_name,</if>
+            <if test="forwardCode != null and forwardCode != ''">forward_code,</if>
+            <if test="isAsync != null and isAsync != ''">is_async,</if>
+            <if test="forwardProtocol != null and forwardProtocol != ''">forward_protocol,</if>
+            <if test="forwardType != null and forwardType != ''">forward_type,</if>
+            <if test="forwardUrl != null">forward_url,</if>
+            <if test="forwardMethod != null">forward_method,</if>
+            <if test="forwardSql != null">forward_sql,</if>
+            <if test="forwardDatasource != null">forward_datasource,</if>
+            <if test="forwardVar != null">forward_var,</if>
+            <if test="isPreparedStatement != null">is_prepared_statement,</if>
+            <if test="rtStatusOk != null">rt_status_ok,</if>
+            <if test="rtStatusError != null">rt_status_error,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="infoId != null">#{infoId},</if>
+            <if test="forwardName != null and forwardName != ''">#{forwardName},</if>
+            <if test="forwardCode != null and forwardCode != ''">#{forwardCode},</if>
+            <if test="isAsync != null and isAsync != ''">#{isAsync},</if>
+            <if test="forwardProtocol != null and forwardProtocol != ''">#{forwardProtocol},</if>
+            <if test="forwardType != null and forwardType != ''">#{forwardType},</if>
+            <if test="forwardUrl != null">#{forwardUrl},</if>
+            <if test="forwardMethod != null">#{forwardMethod},</if>
+            <if test="forwardSql != null">#{forwardSql},</if>
+            <if test="forwardDatasource != null">#{forwardDatasource},</if>
+            <if test="forwardVar != null">#{forwardVar},</if>
+            <if test="isPreparedStatement != null">#{isPreparedStatement},</if>
+            <if test="rtStatusOk != null">#{rtStatusOk},</if>
+            <if test="rtStatusError != null">#{rtStatusError},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInForwardInfo" parameterType="InForwardInfo">
+        update in_forward_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="forwardName != null and forwardName != ''">forward_name = #{forwardName},</if>
+            <if test="forwardCode != null and forwardCode != ''">forward_code = #{forwardCode},</if>
+            <if test="isAsync != null and isAsync != ''">is_async = #{isAsync},</if>
+            <if test="forwardProtocol != null and forwardProtocol != ''">forward_protocol = #{forwardProtocol},</if>
+            <if test="forwardType != null and forwardType != ''">forward_type = #{forwardType},</if>
+            <if test="forwardUrl != null">forward_url = #{forwardUrl},</if>
+            <if test="forwardMethod != null">forward_method = #{forwardMethod},</if>
+            <if test="forwardSql != null">forward_sql = #{forwardSql},</if>
+            <if test="forwardDatasource != null">forward_datasource = #{forwardDatasource},</if>
+            <if test="forwardVar != null">forward_var = #{forwardVar},</if>
+            <if test="isPreparedStatement != null">is_prepared_statement = #{isPreparedStatement},</if>
+            <if test="rtStatusOk != null">rt_status_ok = #{rtStatusOk},</if>
+            <if test="rtStatusError != null">rt_status_error = #{rtStatusError},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where info_id = #{infoId}
+    </update>
+
+    <delete id="deleteInForwardInfoById" parameterType="String">
+        delete from in_forward_info where info_id = #{infoId}
+    </delete>
+
+    <delete id="deleteInForwardInfoByIds" parameterType="String">
+        delete from in_forward_info where info_id in 
+        <foreach item="infoId" collection="array" open="(" separator="," close=")">
+            #{infoId}
+        </foreach>
+    </delete>
+    
+</mapper>
