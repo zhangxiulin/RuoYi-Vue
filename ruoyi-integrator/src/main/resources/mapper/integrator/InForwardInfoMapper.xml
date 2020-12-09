@@ -3,7 +3,10 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.integrator.mapper.InForwardInfoMapper">
-    
 
+    <select id="selectInForwardInfoByCode" parameterType="String" resultMap="InForwardInfoResult">
+        <include refid="selectInForwardInfoVo"/>
+        where forward_code = #{forwardCode}
+    </select>
     
 </mapper>

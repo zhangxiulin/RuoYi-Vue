@@ -11,5 +11,5 @@ import com.ruoyi.integrator.domain.InForwardInfo;
  */
 public interface InForwardInfoMapper extends InForwardInfoMapperAuto
 {
-
+    public InForwardInfo selectInForwardInfoByCode(String forwardCode);
 }

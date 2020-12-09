@@ -19,20 +19,20 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="转发协议" prop="forwardProtocol">
-        <el-select v-model="queryParams.forwardProtocol" placeholder="请选择转发协议" clearable size="small">
+      <el-form-item label="转发类型" prop="forwardType">
+        <el-select v-model="queryParams.forwardType" placeholder="请选择转发类型" clearable size="small">
           <el-option
-            v-for="dict in forwardProtocolOptions"
+            v-for="dict in forwardTypeOptions"
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="转发类型" prop="forwardType">
-        <el-select v-model="queryParams.forwardType" placeholder="请选择转发类型" clearable size="small">
+      <el-form-item label="转发协议" prop="forwardProtocol">
+        <el-select v-model="queryParams.forwardProtocol" placeholder="请选择转发协议" clearable size="small">
           <el-option
-            v-for="dict in forwardTypeOptions"
+            v-for="dict in forwardProtocolOptions"
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
@@ -121,8 +121,8 @@
       <el-table-column label="功能名称" align="center" prop="forwardName" />
       <el-table-column label="转发编号" align="center" prop="forwardCode" />
       <el-table-column label="是否异步" align="center" prop="isAsync" :formatter="isAsyncFormat" />
-      <el-table-column label="转发协议" align="center" prop="forwardProtocol" :formatter="forwardProtocolFormat" />
       <el-table-column label="转发类型" align="center" prop="forwardType" :formatter="forwardTypeFormat" />
+      <el-table-column label="转发协议" align="center" prop="forwardProtocol" :formatter="forwardProtocolFormat" />
       <el-table-column label="启用状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip=true />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -171,20 +171,20 @@
             >{{dict.dictLabel}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="转发协议" prop="forwardProtocol">
-          <el-select v-model="form.forwardProtocol" placeholder="请选择转发协议">
+        <el-form-item label="转发类型" prop="forwardType">
+          <el-select v-model="form.forwardType" placeholder="请选择转发类型">
             <el-option
-              v-for="dict in forwardProtocolOptions"
+              v-for="dict in forwardTypeOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="转发类型" prop="forwardType">
-          <el-select v-model="form.forwardType" placeholder="请选择转发类型">
+        <el-form-item label="转发协议" prop="forwardProtocol">
+          <el-select v-model="form.forwardProtocol" placeholder="请选择转发协议">
             <el-option
-              v-for="dict in forwardTypeOptions"
+              v-for="dict in forwardProtocolOptions"
               :key="dict.dictValue"
               :label="dict.dictLabel"
               :value="dict.dictValue"
@@ -312,11 +312,11 @@ export default {
         isAsync: [
           { required: true, message: "是否异步不能为空", trigger: "blur" }
         ],
-        forwardProtocol: [
-          { required: true, message: "转发协议不能为空", trigger: "change" }
-        ],
         forwardType: [
           { required: true, message: "转发类型不能为空", trigger: "change" }
+        ],
+        forwardProtocol: [
+          { required: true, message: "转发协议不能为空", trigger: "change" }
         ],
         status: [
           { required: true, message: "启用状态不能为空", trigger: "blur" }

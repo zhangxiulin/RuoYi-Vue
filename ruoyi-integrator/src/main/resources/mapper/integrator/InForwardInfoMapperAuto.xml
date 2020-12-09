@@ -9,8 +9,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="forwardName"    column="forward_name"    />
         <result property="forwardCode"    column="forward_code"    />
         <result property="isAsync"    column="is_async"    />
-        <result property="forwardProtocol"    column="forward_protocol"    />
         <result property="forwardType"    column="forward_type"    />
+        <result property="forwardProtocol"    column="forward_protocol"    />
         <result property="forwardUrl"    column="forward_url"    />
         <result property="forwardMethod"    column="forward_method"    />
         <result property="forwardSql"    column="forward_sql"    />
@@ -28,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectInForwardInfoVo">
-        select info_id, forward_name, forward_code, is_async, forward_protocol, forward_type, forward_url, forward_method, forward_sql, forward_datasource, forward_var, is_prepared_statement, rt_status_ok, rt_status_error, status, remark, create_by, create_time, update_by, update_time from in_forward_info
+        select info_id, forward_name, forward_code, is_async, forward_type, forward_protocol, forward_url, forward_method, forward_sql, forward_datasource, forward_var, is_prepared_statement, rt_status_ok, rt_status_error, status, remark, create_by, create_time, update_by, update_time from in_forward_info
     </sql>
 
     <select id="selectInForwardInfoList" parameterType="InForwardInfo" resultMap="InForwardInfoResult">
@@ -36,8 +36,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="forwardName != null  and forwardName != ''"> and forward_name like concat('%', #{forwardName}, '%')</if>
             <if test="forwardCode != null  and forwardCode != ''"> and forward_code = #{forwardCode}</if>
-            <if test="forwardProtocol != null  and forwardProtocol != ''"> and forward_protocol = #{forwardProtocol}</if>
             <if test="forwardType != null  and forwardType != ''"> and forward_type = #{forwardType}</if>
+            <if test="forwardProtocol != null  and forwardProtocol != ''"> and forward_protocol = #{forwardProtocol}</if>
             <if test="forwardUrl != null  and forwardUrl != ''"> and forward_url like concat('%', #{forwardUrl}, '%')</if>
             <if test="forwardSql != null  and forwardSql != ''"> and forward_sql like concat('%', #{forwardSql}, '%')</if>
             <if test="forwardDatasource != null  and forwardDatasource != ''"> and forward_datasource = #{forwardDatasource}</if>
@@ -57,8 +57,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="forwardName != null and forwardName != ''">forward_name,</if>
             <if test="forwardCode != null and forwardCode != ''">forward_code,</if>
             <if test="isAsync != null and isAsync != ''">is_async,</if>
-            <if test="forwardProtocol != null and forwardProtocol != ''">forward_protocol,</if>
             <if test="forwardType != null and forwardType != ''">forward_type,</if>
+            <if test="forwardProtocol != null and forwardProtocol != ''">forward_protocol,</if>
             <if test="forwardUrl != null">forward_url,</if>
             <if test="forwardMethod != null">forward_method,</if>
             <if test="forwardSql != null">forward_sql,</if>
@@ -79,8 +79,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="forwardName != null and forwardName != ''">#{forwardName},</if>
             <if test="forwardCode != null and forwardCode != ''">#{forwardCode},</if>
             <if test="isAsync != null and isAsync != ''">#{isAsync},</if>
-            <if test="forwardProtocol != null and forwardProtocol != ''">#{forwardProtocol},</if>
             <if test="forwardType != null and forwardType != ''">#{forwardType},</if>
+            <if test="forwardProtocol != null and forwardProtocol != ''">#{forwardProtocol},</if>
             <if test="forwardUrl != null">#{forwardUrl},</if>
             <if test="forwardMethod != null">#{forwardMethod},</if>
             <if test="forwardSql != null">#{forwardSql},</if>
@@ -104,8 +104,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="forwardName != null and forwardName != ''">forward_name = #{forwardName},</if>
             <if test="forwardCode != null and forwardCode != ''">forward_code = #{forwardCode},</if>
             <if test="isAsync != null and isAsync != ''">is_async = #{isAsync},</if>
-            <if test="forwardProtocol != null and forwardProtocol != ''">forward_protocol = #{forwardProtocol},</if>
             <if test="forwardType != null and forwardType != ''">forward_type = #{forwardType},</if>
+            <if test="forwardProtocol != null and forwardProtocol != ''">forward_protocol = #{forwardProtocol},</if>
             <if test="forwardUrl != null">forward_url = #{forwardUrl},</if>
             <if test="forwardMethod != null">forward_method = #{forwardMethod},</if>
             <if test="forwardSql != null">forward_sql = #{forwardSql},</if>

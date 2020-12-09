@@ -30,13 +30,13 @@ public class InForwardInfo extends BaseEntity
     @Excel(name = "是否异步")
     private String isAsync;
 
-    /** 转发协议 */
-    @Excel(name = "转发协议")
-    private String forwardProtocol;
-
     /** 转发类型 */
     @Excel(name = "转发类型")
     private String forwardType;
+
+    /** 转发协议 */
+    @Excel(name = "转发协议")
+    private String forwardProtocol;
 
     /** 转发URL */
     private String forwardUrl;

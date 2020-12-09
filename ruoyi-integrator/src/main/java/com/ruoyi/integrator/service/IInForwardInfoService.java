@@ -58,4 +58,12 @@ public interface IInForwardInfoService
      * @return 结果
      */
     public int deleteInForwardInfoById(String infoId);
+
+
+    /**
+     *@Description: 根据转发编号查找转发配置信息
+     *@params:
+     *@return:
+     */
+    public InForwardInfo selectInForwardInfoByCode(String forwardCode);
 }

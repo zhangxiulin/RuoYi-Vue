@@ -2,7 +2,7 @@ package com.ruoyi.integrator.service;
 
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.integrator.domain.vo.InForwardRequestVo;
-import com.ruoyi.integrator.domain.vo.InForwardResponseVo;
+import com.ruoyi.integrator.enums.InForwardType;
 
 /**
  * 转发Service接口
@@ -12,6 +12,6 @@ import com.ruoyi.integrator.domain.vo.InForwardResponseVo;
  */
 public interface IInForwardService {
 
-    InForwardResponseVo rest(InForwardRequestVo request);
+    AjaxResult forward(InForwardType type, InForwardRequestVo request);
 
 }

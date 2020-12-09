@@ -1,12 +1,15 @@
 package com.ruoyi.integrator.service.impl;
 
-import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.uuid.IdUtils;
+import com.ruoyi.integrator.domain.InForwardInfo;
+import com.ruoyi.integrator.mapper.InForwardInfoMapper;
+import com.ruoyi.integrator.service.IInForwardInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.integrator.mapper.InForwardInfoMapper;
-import com.ruoyi.integrator.domain.InForwardInfo;
-import com.ruoyi.integrator.service.IInForwardInfoService;
+
+import java.util.List;
 
 /**
  * 转发配置Service业务层处理
@@ -53,6 +56,8 @@ public class InForwardInfoServiceImpl implements IInForwardInfoService
     @Override
     public int insertInForwardInfo(InForwardInfo inForwardInfo)
     {
+        inForwardInfo.setInfoId(IdUtils.fastSimpleUUID());
+        inForwardInfo.setCreateBy(SecurityUtils.getUsername());
         inForwardInfo.setCreateTime(DateUtils.getNowDate());
         return inForwardInfoMapper.insertInForwardInfo(inForwardInfo);
     }
@@ -66,6 +71,7 @@ public class InForwardInfoServiceImpl implements IInForwardInfoService
     @Override
     public int updateInForwardInfo(InForwardInfo inForwardInfo)
     {
+        inForwardInfo.setUpdateBy(SecurityUtils.getUsername());
         inForwardInfo.setUpdateTime(DateUtils.getNowDate());
         return inForwardInfoMapper.updateInForwardInfo(inForwardInfo);
     }
@@ -92,5 +98,10 @@ public class InForwardInfoServiceImpl implements IInForwardInfoService
     public int deleteInForwardInfoById(String infoId)
     {
         return inForwardInfoMapper.deleteInForwardInfoById(infoId);
+    }
+
+    @Override
+    public InForwardInfo selectInForwardInfoByCode(String forwardCode) {
+        return inForwardInfoMapper.selectInForwardInfoByCode(forwardCode);
     }
 }

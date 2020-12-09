@@ -1,6 +1,10 @@
 package com.ruoyi.integrator.domain.vo;
 
-import com.alibaba.fastjson.JSONObject;
+import com.ruoyi.integrator.domain.InForwardInfo;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.util.Map;
 
 /**
  * @description: 前置转发请求对象
@@ -11,10 +15,16 @@ public class InForwardRequestVo {
 
     private String reqId;
 
-    private JSONObject params;
+    private Map<String, Object> var;
 
-    private JSONObject data;
+    private Map<String, Object> data;
 
+    /**过程数据**/
+    private InForwardInfo inForwardInfo;
+    /**过程数据**/
+
+    @NotBlank(message = "转发编号不能为空")
+    @Size(min = 0, max = 30, message = "转发编号长度不能超过30个字符")
     public String getReqId() {
         return reqId;
     }
@@ -23,19 +33,27 @@ public class InForwardRequestVo {
         this.reqId = reqId;
     }
 
-    public JSONObject getParams() {
-        return params;
+    public Map<String, Object> getVar() {
+        return var;
     }
 
-    public void setParams(JSONObject params) {
-        this.params = params;
+    public void setVar(Map<String, Object> var) {
+        this.var = var;
     }
 
-    public JSONObject getData() {
+    public Map<String, Object> getData() {
         return data;
     }
 
-    public void setData(JSONObject data) {
+    public void setData(Map<String, Object> data) {
         this.data = data;
+    }
+
+    public InForwardInfo getInForwardInfo() {
+        return inForwardInfo;
+    }
+
+    public void setInForwardInfo(InForwardInfo inForwardInfo) {
+        this.inForwardInfo = inForwardInfo;
     }
 }

@@ -80,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
      * hasAuthority        |   如果有参数，参数表示权限，则其权限可以访问
      * hasIpAddress        |   如果有参数，参数表示IP地址，如果用户IP和参数匹配，则可以访问
      * hasRole             |   如果有参数，参数表示角色，则其角色可以访问
-     * permitAll           |   用户可以任意访问
+     * permitAll           |   用户可以任意访问（必须带身份信息但是不校验权限）
      * rememberMe          |   允许通过remember-me登录的用户访问
      * authenticated       |   用户登录后可访问
      */
