@@ -260,6 +260,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      codes:[],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -423,6 +424,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.infoId)
+      this.codes = selection.map(item => item.forwardCode)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -465,7 +467,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const infoIds = row.infoId || this.ids;
-      this.$confirm('是否确认删除转发配置编号为"' + infoIds + '"的数据项?', "警告", {
+      const forwardCodes = row.forwardCode || this.codes;
+      this.$confirm('是否确认删除转发配置编号为"' + forwardCodes + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
