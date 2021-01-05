@@ -6,7 +6,7 @@ import ${packageName}.domain.${ClassName};
 /**
  * ${functionName}MapperAuto接口
  *
- * 由代码生成器产生，为适应表结构变化，请勿修改
+ * 由代码生成器产生，为适应表结构变化，尽量不要修改
  *
  * @author ${author}
  * @date ${datetime}

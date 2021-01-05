@@ -156,90 +156,100 @@
     <!-- 添加或修改转发配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="功能名称" prop="forwardName">
-          <el-input v-model="form.forwardName" placeholder="请输入功能名称" />
-        </el-form-item>
-        <el-form-item label="转发编号" prop="forwardCode">
-          <el-input v-model="form.forwardCode" placeholder="请输入转发编号" />
-        </el-form-item>
-        <el-form-item label="是否异步">
-          <el-radio-group v-model="form.isAsync">
-            <el-radio
-              v-for="dict in isAsyncOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{dict.dictLabel}}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="转发类型" prop="forwardType">
-          <el-select v-model="form.forwardType" placeholder="请选择转发类型">
-            <el-option
-              v-for="dict in forwardTypeOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="转发协议" prop="forwardProtocol">
-          <el-select v-model="form.forwardProtocol" placeholder="请选择转发协议">
-            <el-option
-              v-for="dict in forwardProtocolOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="转发URL" prop="forwardUrl">
-          <el-input v-model="form.forwardUrl" placeholder="请输入转发URL" />
-        </el-form-item>
-        <el-form-item label="方法类型" prop="forwardMethod">
-          <el-select v-model="form.forwardMethod" placeholder="请选择方法类型">
-            <el-option
-              v-for="dict in forwardMethodOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="SQL" prop="forwardSql">
-          <el-input v-model="form.forwardSql" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="数据源" prop="forwardDatasource">
-          <el-input v-model="form.forwardDatasource" placeholder="请输入数据源" />
-        </el-form-item>
-        <el-form-item label="变量" prop="forwardVar">
-          <el-input v-model="form.forwardVar" placeholder="请输入变量" />
-        </el-form-item>
-        <el-form-item label="预编译STMT">
-          <el-radio-group v-model="form.isPreparedStatement">
-            <el-radio
-              v-for="dict in isPreparedStatementOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{dict.dictLabel}}</el-radio>
-          </el-radio-group>
-        </el-form-item>
+        <el-tabs tab-position="left" style="height: 450px;">
+          <el-tab-pane label="基础配置">
+            <el-form-item label="功能名称" prop="forwardName">
+              <el-input v-model="form.forwardName" placeholder="请输入功能名称" />
+            </el-form-item>
+            <el-form-item label="转发编号" prop="forwardCode">
+              <el-input v-model="form.forwardCode" placeholder="请输入转发编号" />
+            </el-form-item>
+            <el-form-item label="是否异步">
+              <el-radio-group v-model="form.isAsync">
+                <el-radio
+                  v-for="dict in isAsyncOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                >{{dict.dictLabel}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="转发类型" prop="forwardType">
+              <el-select v-model="form.forwardType" placeholder="请选择转发类型" @change="forwardTypeChange" >
+                <el-option
+                  v-for="dict in forwardTypeOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="目标协议" prop="forwardProtocol">
+              <el-select v-model="form.forwardProtocol" placeholder="请选择目标协议">
+                <el-option
+                  v-for="dict in forwardProtocolOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="启用状态">
+              <el-radio-group v-model="form.status">
+                <el-radio
+                  v-for="dict in statusOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                >{{dict.dictLabel}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+            </el-form-item>
+          </el-tab-pane>
+          <el-tab-pane label="接口转发">
+            <el-form-item label="转发URL" prop="forwardUrl">
+              <el-input v-model="form.forwardUrl" placeholder="请输入转发URL，变量：${key}" :disabled="form_forwardUrl_disabled" />
+            </el-form-item>
+            <el-form-item label="方法类型" prop="forwardMethod">
+              <el-select v-model="form.forwardMethod" placeholder="请选择方法类型" :disabled="form_forwardMethod_disabled" >
+                <el-option
+                  v-for="dict in forwardMethodOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-tab-pane>
+          <el-tab-pane label="SQL转发">
+            <el-form-item label="SQL" prop="forwardSql">
+              <el-input v-model="form.forwardSql" type="textarea" placeholder="请输入SQL内容，变量：${key}，动态参数：#{key}" :disabled="form_forwardSql_disabled" />
+            </el-form-item>
+            <el-form-item label="数据源" prop="forwardDatasource">
+              <el-input v-model="form.forwardDatasource" placeholder="请输入数据源" :disabled="form_forwardDatasource_disabled" />
+            </el-form-item>
+            <el-form-item label="变量" prop="forwardVar" v-show="false" >
+              <el-input v-model="form.forwardVar" placeholder="请输入变量，格式：{ 报文键 : 变量名 }" />
+            </el-form-item>
+            <el-form-item label="预编译STMT">
+              <el-radio-group v-model="form.isPreparedStatement">
+                <el-radio
+                  v-for="dict in isPreparedStatementOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                >{{dict.dictLabel}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-tab-pane>
+        </el-tabs>
+        <!--
         <el-form-item label="自定义成功码" prop="rtStatusOk">
           <el-input v-model="form.rtStatusOk" placeholder="请输入自定义成功码" />
         </el-form-item>
         <el-form-item label="自定义失败码" prop="rtStatusError">
           <el-input v-model="form.rtStatusError" placeholder="请输入自定义失败码" />
-        </el-form-item>
-        <el-form-item label="启用状态">
-          <el-radio-group v-model="form.status">
-            <el-radio
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{dict.dictLabel}}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
+        </el-form-item> -->
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -322,7 +332,12 @@ export default {
         status: [
           { required: true, message: "启用状态不能为空", trigger: "blur" }
         ],
-      }
+
+      },
+      form_forwardSql_disabled : false,
+      form_forwardDatasource_disabled : false,
+      form_forwardUrl_disabled: false,
+      form_forwardMethod_disabled: false,
     };
   },
   created() {
@@ -407,9 +422,13 @@ export default {
         createBy: null,
         createTime: null,
         updateBy: null,
-        updateTime: null
+        updateTime: null,
       };
       this.resetForm("form");
+      this.form_forwardSql_disabled = true;
+      this.form_forwardDatasource_disabled = true;
+      this.form_forwardUrl_disabled = false;
+      this.form_forwardMethod_disabled = false;
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -442,6 +461,7 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改转发配置";
+        this.controlDisable(this.form.forwardType);
       });
     },
     /** 提交按钮 */
@@ -491,6 +511,29 @@ export default {
         }).then(response => {
           this.download(response.msg);
         })
+    },
+    /**转发类型改变**/
+    forwardTypeChange(item) {
+      this.controlDisable(item);
+    },
+
+    controlDisable(forwardType){
+      if (forwardType == "000000") {
+        this.form_forwardSql_disabled = true;
+        this.form_forwardDatasource_disabled = true;
+        this.form_forwardUrl_disabled = false;
+        this.form_forwardMethod_disabled = false;
+      } else if (forwardType == "200001"){
+        this.form_forwardSql_disabled = false;
+        this.form_forwardDatasource_disabled = false;
+        this.form_forwardUrl_disabled = true;
+        this.form_forwardMethod_disabled = true;
+      } else if (forwardType == "200011") {
+        this.form_forwardSql_disabled = false;
+        this.form_forwardDatasource_disabled = false;
+        this.form_forwardUrl_disabled = true;
+        this.form_forwardMethod_disabled = true;
+      }
     }
   }
 };

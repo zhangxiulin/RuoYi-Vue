@@ -4,6 +4,7 @@ import com.ruoyi.integrator.domain.InForwardInfo;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,8 +20,12 @@ public class InForwardRequestVo {
 
     private Map<String, Object> data;
 
+    private List dataList;
+
     /**过程数据**/
     private InForwardInfo inForwardInfo;
+
+    private Map<String, Object> relateData;
     /**过程数据**/
 
     @NotBlank(message = "转发编号不能为空")
@@ -55,5 +60,21 @@ public class InForwardRequestVo {
 
     public void setInForwardInfo(InForwardInfo inForwardInfo) {
         this.inForwardInfo = inForwardInfo;
+    }
+
+    public List getDataList() {
+        return dataList;
+    }
+
+    public void setDataList(List dataList) {
+        this.dataList = dataList;
+    }
+
+    public Map<String, Object> getRelateData() {
+        return relateData;
+    }
+
+    public void setRelateData(Map<String, Object> relateData) {
+        this.relateData = relateData;
     }
 }

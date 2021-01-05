@@ -35,18 +35,16 @@ public class InRestForwardStrategy implements IInForwardStrategy {
 
     @Override
     public Object forward(InForwardRequestVo request) {
-        logger.debug("本次请求[" + request.getReqId() + "]为HTTP转发请求");
+        logger.info("本次请求[" + request.getReqId() + "]为HTTP转发请求");
         AjaxResult ajaxResult = null;
         InForwardInfo inForwardInfo = request.getInForwardInfo();
         RestForwardSendThread rfst = new RestForwardSendThread(inForwardInfo, request.getVar(), request.getData());
         if (Constants.YES.equals(inForwardInfo.getIsAsync())){ // 异步
             threadPoolTaskExecutor.submit(rfst);
             ajaxResult = AjaxResult.success("转发提交成功");
-            return ajaxResult;
         } else { // 同步
-            rfst.run();
-            Object resultData = rfst.getResult();
-            return resultData;
+            ajaxResult = rfst.call();
         }
+        return ajaxResult;
     }
 }

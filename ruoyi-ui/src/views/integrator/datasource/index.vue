@@ -10,6 +10,16 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="种类" prop="datasourceType">
+        <el-select v-model="queryParams.datasourceType" placeholder="请选择连接池种类" clearable size="small">
+          <el-option
+            v-for="dict in datasourceTypeOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="启用状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择启用状态" clearable size="small">
           <el-option
@@ -72,6 +82,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <!--<el-table-column label="主键ID" align="center" prop="datasourceId" /> -->
       <el-table-column label="数据源名称" align="center" prop="datasourceName" />
+      <el-table-column label="连接池种类" align="center" prop="datasourceType" :formatter="datasourceTypeFormat" />
       <el-table-column label="数据源配置" align="center" prop="datasourceOptions" :show-overflow-tooltip=true  />
       <el-table-column label="启用状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip=true  />
@@ -91,6 +102,13 @@
             @click="handleDelete(scope.row)"
             v-hasPermi="['integrator:datasource:remove']"
           >删除</el-button>
+          <el-button
+            type="text"
+            size="small"
+            icon="el-icon-refresh"
+            @click="handleSynchDs(scope.row)"
+            v-hasPermi="['tool:gen:edit']"
+          >同步</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -108,6 +126,16 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="数据源名称" prop="datasourceName">
           <el-input v-model="form.datasourceName" placeholder="请输入数据源名称" />
+        </el-form-item>
+        <el-form-item label="连接池种类" prop="datasourceType">
+          <el-select v-model="form.datasourceType" placeholder="请选择连接池种类" @change="datasouceTypeChange" >
+            <el-option
+              v-for="dict in datasourceTypeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="数据源配置" prop="datasourceOptions">
           <el-input v-model="form.datasourceOptions" type="textarea" placeholder="请输入内容（json格式）" />
@@ -134,7 +162,7 @@
 </template>
 
 <script>
-import { listDatasource, getDatasource, delDatasource, addDatasource, updateDatasource, exportDatasource } from "@/api/integrator/datasource";
+import { listDatasource, getDatasource, delDatasource, addDatasource, updateDatasource, exportDatasource, synchDs } from "@/api/integrator/datasource";
 
 export default {
   name: "Datasource",
@@ -159,6 +187,8 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 连接池种类字典
+      datasourceTypeOptions: [],
       // 启用状态字典
       statusOptions: [],
       // 查询参数
@@ -176,14 +206,52 @@ export default {
         datasourceName: [
           { required: true, message: "数据源名称不能为空", trigger: "blur" }
         ],
+        datasourceType: [
+          { required: true, message: "连接池种类不能为空", trigger: "change" }
+        ],
         datasourceOptions: [
           { required: true, message: "数据源配置不能为空", trigger: "blur" }
         ],
-      }
+      },
+      // druid配置信息示例
+      druidDemo : {
+        "driverClassName":"com.mysql.cj.jdbc.Driver",
+        "url":"",
+        "username":"",
+        "password":"",
+        "initialSize": 5,
+        "minIdle": 10,
+        "maxActive": 20,
+        "maxWait": 60000,
+        "timeBetweenEvictionRunsMillis": 60000,
+        "minEvictableIdleTimeMillis": 300000,
+        "maxEvictableIdleTimeMillis": 900000,
+        "validationQuery": "SELECT 1 FROM DUAL",
+        "testWhileIdle": true,
+        "testOnBorrow": false,
+        "testOnReturn": false,
+        "webStatFilter":{"enabled": true}
+      },
+      hikariDemo : {
+        "driverClassName":"com.mysql.cj.jdbc.Driver",
+        "url":"",
+        "username":"",
+        "password":"",
+        "autoCommit": true,
+        "idleTimeout":30000,
+        "poolName":"default",
+        "registerMbeans":"",
+        "catalog":true,
+        "maximumPoolSize":"20",
+        "minimumIdle":"5"
+      },
     };
   },
   created() {
     this.getList();
+    this.getDicts("in_datasource_type").then(response => {
+      this.datasourceTypeOptions = response.data;
+    });
     this.getDicts("sys_normal_disable").then(response => {
       this.statusOptions = response.data;
     });
@@ -197,6 +265,10 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+    },
+    // 连接池种类字典翻译
+    datasourceTypeFormat(row, column) {
+      return this.selectDictLabel(this.datasourceTypeOptions, row.datasourceType);
     },
     // 启用状态字典翻译
     statusFormat(row, column) {
@@ -212,7 +284,8 @@ export default {
       this.form = {
         datasourceId: null,
         datasourceName: null,
-        datasourceOptions: null,
+        datasourceType: "Druid",
+        datasourceOptions: JSON.stringify(this.druidDemo),
         status: "0",
         remark: null,
         createBy: null,
@@ -302,6 +375,30 @@ export default {
         }).then(response => {
           this.download(response.msg);
         })
+    },
+
+    /**切换数据源厂商类型**/
+    datasouceTypeChange(item){
+      if (item == "Druid") {
+        this.form.datasourceOptions = JSON.stringify(this.druidDemo);
+      }else if (item == "HikariCP"){
+        this.form.datasourceOptions = JSON.stringify(this.hikariDemo);
+      }
+    },
+
+    /** 同步数据库操作 */
+    handleSynchDs(row) {
+      const datasourceName = row.datasourceName;
+      const datasourceId = row.datasourceId;
+      this.$confirm('确认要强制同步"' + datasourceName + '"数据源吗？', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return synchDs(datasourceId);
+      }).then(() => {
+        this.msgSuccess("同步成功");
+    })
     }
   }
 };

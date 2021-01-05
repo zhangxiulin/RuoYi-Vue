@@ -58,4 +58,11 @@ public interface IInDatasourceService
      * @return 结果
      */
     public int deleteInDatasourceById(String datasourceId);
+
+    /**
+     *@Description: 同步数据源
+     *@params: datasourceId 数据源ID
+     *@return:
+     */
+    boolean synchDs(String datasourceId);
 }

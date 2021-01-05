@@ -29,7 +29,7 @@ import com.ruoyi.framework.datasource.DynamicDataSource;
  * 
  * @author ruoyi
  */
-@Configuration
+//@Configuration
 public class DruidConfig
 {
     @Bean

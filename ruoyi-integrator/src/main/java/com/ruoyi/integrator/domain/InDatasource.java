@@ -6,10 +6,10 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 数据源对象 in_datasource
+ * 转发数据源对象 in_datasource
  * 
  * @author zhangxiulin
- * @date 2020-12-09
+ * @date 2020-12-13
  */
 public class InDatasource extends BaseEntity
 {
@@ -21,6 +21,10 @@ public class InDatasource extends BaseEntity
     /** 数据源名称 */
     @Excel(name = "数据源名称")
     private String datasourceName;
+
+    /** 连接池种类 */
+    @Excel(name = "连接池种类")
+    private String datasourceType;
 
     /** 数据源配置 */
     @Excel(name = "数据源配置")
@@ -48,6 +52,15 @@ public class InDatasource extends BaseEntity
     {
         return datasourceName;
     }
+    public void setDatasourceType(String datasourceType) 
+    {
+        this.datasourceType = datasourceType;
+    }
+
+    public String getDatasourceType() 
+    {
+        return datasourceType;
+    }
     public void setDatasourceOptions(String datasourceOptions) 
     {
         this.datasourceOptions = datasourceOptions;
@@ -72,6 +85,7 @@ public class InDatasource extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("datasourceId", getDatasourceId())
             .append("datasourceName", getDatasourceName())
+            .append("datasourceType", getDatasourceType())
             .append("datasourceOptions", getDatasourceOptions())
             .append("status", getStatus())
             .append("remark", getRemark())

@@ -43,6 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="forwardDatasource != null  and forwardDatasource != ''"> and forward_datasource = #{forwardDatasource}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
+        order by create_time desc
     </select>
     
     <select id="selectInForwardInfoById" parameterType="String" resultMap="InForwardInfoResult">

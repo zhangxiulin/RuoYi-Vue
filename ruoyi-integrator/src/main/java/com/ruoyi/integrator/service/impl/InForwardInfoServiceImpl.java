@@ -104,4 +104,9 @@ public class InForwardInfoServiceImpl implements IInForwardInfoService
     public InForwardInfo selectInForwardInfoByCode(String forwardCode) {
         return inForwardInfoMapper.selectInForwardInfoByCode(forwardCode);
     }
+
+    @Override
+    public List<InForwardInfo> selectInForwardInfoAll() {
+        return inForwardInfoMapper.selectInForwardInfoAll();
+    }
 }

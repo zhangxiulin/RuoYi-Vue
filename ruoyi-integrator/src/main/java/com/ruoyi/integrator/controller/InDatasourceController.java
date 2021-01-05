@@ -100,4 +100,18 @@ public class InDatasourceController extends BaseController
     {
         return toAjax(inDatasourceService.deleteInDatasourceByIds(datasourceIds));
     }
+
+    /**
+     * 同步数据源
+     */
+    @PreAuthorize("@ss.hasPermi('integrator:datasource:synchDs')")
+    @GetMapping("/synchDs/{datasourceId}")
+    public AjaxResult synchDs(@PathVariable String datasourceId)
+    {
+        if (inDatasourceService.synchDs(datasourceId)) {
+            return AjaxResult.success();
+        } else {
+            return AjaxResult.error();
+        }
+    }
 }

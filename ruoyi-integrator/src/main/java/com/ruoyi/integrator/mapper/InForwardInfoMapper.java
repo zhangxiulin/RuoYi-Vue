@@ -11,5 +11,11 @@ import com.ruoyi.integrator.domain.InForwardInfo;
  */
 public interface InForwardInfoMapper extends InForwardInfoMapperAuto
 {
-    public InForwardInfo selectInForwardInfoByCode(String forwardCode);
+    InForwardInfo selectInForwardInfoByCode(String forwardCode);
+
+    List<InForwardInfo> selectInForwardInfoAll();
+
+    List<InForwardInfo> selectInForwardInfoListByAgrCode(String agrCode);
+
+    List<InForwardInfo> selectInForwardInfoListByAgrId(String agrId);
 }

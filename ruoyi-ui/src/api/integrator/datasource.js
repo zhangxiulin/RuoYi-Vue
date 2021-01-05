@@ -51,3 +51,11 @@ export function exportDatasource(query) {
     params: query
   })
 }
+
+// 同步数据源
+export function synchDs(datasourceId) {
+  return request({
+    url: '/integrator/datasource/synchDs/' + datasourceId,
+    method: 'get'
+  })
+}

@@ -66,4 +66,6 @@ public interface IInForwardInfoService
      *@return:
      */
     public InForwardInfo selectInForwardInfoByCode(String forwardCode);
+
+    List<InForwardInfo> selectInForwardInfoAll();
 }

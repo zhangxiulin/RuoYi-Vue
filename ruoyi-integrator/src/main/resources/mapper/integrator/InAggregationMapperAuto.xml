@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.integrator.mapper.InAggregationMapper">
+    
+    <resultMap type="InAggregation" id="InAggregationResult">
+        <result property="agrId"    column="agr_id"    />
+        <result property="agrName"    column="agr_name"    />
+        <result property="agrCode"    column="agr_code"    />
+        <result property="isDtx"    column="is_dtx"    />
+        <result property="dtxSolution"    column="dtx_solution"    />
+        <result property="isAsync"    column="is_async"    />
+        <result property="executionOrder"    column="execution_order"    />
+        <result property="rtStatusOk"    column="rt_status_ok"    />
+        <result property="rtStatusError"    column="rt_status_error"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectInAggregationVo">
+        select agr_id, agr_name, agr_code, is_dtx, dtx_solution, is_async, execution_order, rt_status_ok, rt_status_error, status, remark, create_by, create_time, update_by, update_time from in_aggregation
+    </sql>
+
+    <select id="selectInAggregationList" parameterType="InAggregation" resultMap="InAggregationResult">
+        <include refid="selectInAggregationVo"/>
+        <where>  
+            <if test="agrName != null  and agrName != ''"> and agr_name like concat('%', #{agrName}, '%')</if>
+            <if test="agrCode != null  and agrCode != ''"> and agr_code = #{agrCode}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectInAggregationById" parameterType="String" resultMap="InAggregationResult">
+        <include refid="selectInAggregationVo"/>
+        where agr_id = #{agrId}
+    </select>
+        
+    <insert id="insertInAggregation" parameterType="InAggregation">
+        insert into in_aggregation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="agrId != null">agr_id,</if>
+            <if test="agrName != null">agr_name,</if>
+            <if test="agrCode != null">agr_code,</if>
+            <if test="isDtx != null">is_dtx,</if>
+            <if test="dtxSolution != null">dtx_solution,</if>
+            <if test="isAsync != null">is_async,</if>
+            <if test="executionOrder != null">execution_order,</if>
+            <if test="rtStatusOk != null">rt_status_ok,</if>
+            <if test="rtStatusError != null">rt_status_error,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="agrId != null">#{agrId},</if>
+            <if test="agrName != null">#{agrName},</if>
+            <if test="agrCode != null">#{agrCode},</if>
+            <if test="isDtx != null">#{isDtx},</if>
+            <if test="dtxSolution != null">#{dtxSolution},</if>
+            <if test="isAsync != null">#{isAsync},</if>
+            <if test="executionOrder != null">#{executionOrder},</if>
+            <if test="rtStatusOk != null">#{rtStatusOk},</if>
+            <if test="rtStatusError != null">#{rtStatusError},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInAggregation" parameterType="InAggregation">
+        update in_aggregation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="agrName != null">agr_name = #{agrName},</if>
+            <if test="agrCode != null">agr_code = #{agrCode},</if>
+            <if test="isDtx != null">is_dtx = #{isDtx},</if>
+            <if test="dtxSolution != null">dtx_solution = #{dtxSolution},</if>
+            <if test="isAsync != null">is_async = #{isAsync},</if>
+            <if test="executionOrder != null">execution_order = #{executionOrder},</if>
+            <if test="rtStatusOk != null">rt_status_ok = #{rtStatusOk},</if>
+            <if test="rtStatusError != null">rt_status_error = #{rtStatusError},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where agr_id = #{agrId}
+    </update>
+
+    <delete id="deleteInAggregationById" parameterType="String">
+        delete from in_aggregation where agr_id = #{agrId}
+    </delete>
+
+    <delete id="deleteInAggregationByIds" parameterType="String">
+        delete from in_aggregation where agr_id in 
+        <foreach item="agrId" collection="array" open="(" separator="," close=")">
+            #{agrId}
+        </foreach>
+    </delete>
+    
+</mapper>

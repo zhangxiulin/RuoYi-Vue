@@ -130,4 +130,9 @@ public class Constants
     public static final String YES = "Y";
 
     public static final String NO = "N";
+
+    public static final String STATUS_NORMAL = "0";  // 状态-启用
+
+    public static final String STATUS_DISABLE = "1"; // 状态-停用
+
 }
