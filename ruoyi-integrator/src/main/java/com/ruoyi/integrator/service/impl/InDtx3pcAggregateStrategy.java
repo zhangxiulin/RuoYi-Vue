@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
  * @author: zhangxiulin
  * @time: 2020/12/27 21:32
  */
+@Deprecated
 @Component
 public class InDtx3pcAggregateStrategy implements IInAggregateStrategy {
 
