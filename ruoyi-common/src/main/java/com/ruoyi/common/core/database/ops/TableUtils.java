@@ -1,12 +1,15 @@
 package com.ruoyi.common.core.database.ops;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.ruoyi.common.utils.PatternUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @description:
@@ -16,6 +19,8 @@ import java.util.Map;
 public class TableUtils {
 
     private static final Logger log = LoggerFactory.getLogger(TableUtils.class);
+
+    public static final String SQL_PATTERN = "\\#\\{[a-zA-Z0-9_]+\\}";
 
     public static final int findInt(String[] colArray, String key) throws RuntimeException {
         for(int i = 0; i < colArray.length; ++i) {
@@ -102,6 +107,96 @@ public class TableUtils {
             rsmd = null;
             return colMap;
         }
+    }
+
+    public static JSONArray table2Json(Table table){
+        JSONArray jsonArray = new JSONArray();
+        if (table != null) {
+            Map<String, Integer> colMap = table.getColMap();
+            Object[][] tempResult = table.getTempResult();
+            if (tempResult != null) {
+                for (int g = 0, leng = tempResult.length; g < leng; g++) {
+                    JSONObject jsonObject = new JSONObject();
+                    Set<String> colKeySet = colMap.keySet();
+                    Iterator<String> iterator = colKeySet.iterator();
+                    while (iterator.hasNext()) {
+                        String colName = iterator.next();
+                        jsonObject.put(colName, tempResult[g][colMap.get(colName)]);
+                    }
+                    jsonArray.add(jsonObject);
+                }
+            }
+        }
+        return jsonArray;
+    }
+
+    public static List prepareParamsList(String sql, Object sendData){
+        // 预编译STMT动态参数，格式：#{}
+        // 规则：{ 参数名 : 参数值 }
+        List<Object[]> list = new ArrayList<>(1);
+        List<String> matchedStrs = PatternUtils.getMatchedStrs(SQL_PATTERN, sql);
+        // 判断单笔批量
+        if (sendData != null) {
+            if (sendData instanceof List) {
+                ((List) sendData).forEach(d -> {  // 批量
+                    Object[] params = null;
+                    // 动态参数数组
+                    params = new Object[matchedStrs.size()];
+                    for (int j = 0, lenj = matchedStrs.size(); j < lenj; j++) {
+                        params[j] = ((Map) d).get(matchedStrs.get(j).substring(2, matchedStrs.get(j).length() - 1));
+                    }
+                    list.add(params);
+                });
+            } else {
+                Object[] params = null;
+                // 动态参数数组
+                params = new Object[matchedStrs.size()];
+                for (int j = 0, lenj = matchedStrs.size(); j < lenj; j++) {
+                    params[j] = ((Map) sendData).get(matchedStrs.get(j).substring(2, matchedStrs.get(j).length() - 1));
+                }
+                list.add(params);
+            }
+        }
+        return list;
+    }
+
+    public static Object[] prepareParams(String sql, Object sendData){
+        // 预编译STMT动态参数，格式：#{}
+        // 规则：{ 参数名 : 参数值 }
+        List<String> matchedStrs = PatternUtils.getMatchedStrs(SQL_PATTERN, sql);
+
+        Object[] params = null;
+        if (sendData != null) {
+            // 动态参数数组
+            params = new Object[matchedStrs.size()];
+            for (int j = 0, lenj = matchedStrs.size(); j < lenj; j++) {
+                params[j] = ((Map) sendData).get(matchedStrs.get(j).substring(2, matchedStrs.get(j).length() - 1));
+            }
+        }
+        return params;
+    }
+
+    public static String prepareSql(String sql){
+        // 预编译STMT动态参数，格式：#{}
+        // 规则：{ 参数名 : 参数值 }
+        List<String> matchedStrs = PatternUtils.getMatchedStrs(SQL_PATTERN, sql);
+        // 类MyBatis的语法 -> “?”占位的预编译SQL格式
+        for (int j = 0, lenj = matchedStrs.size(); j < lenj; j++) {
+            sql = sql.replaceAll("\\#\\{" + matchedStrs.get(j).substring(2, matchedStrs.get(j).length() - 1) + "\\}", "?");
+        }
+        return sql;
+    }
+
+    public static Table resultSet2Table(ResultSet rs) throws SQLException{
+        Table table = new Table();
+        if (rs != null) {
+            table = table.addColumns(TableUtils.mapColumns(rs, new HashMap()));
+            Object[][] r = TableUtils.mapValues(rs, table.getColMap().size());
+            if (r != null && r.length > 0) {
+                table = table.addData(r);
+            }
+        }
+        return table;
     }
 
 }

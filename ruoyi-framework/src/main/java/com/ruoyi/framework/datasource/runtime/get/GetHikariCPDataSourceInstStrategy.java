@@ -31,7 +31,7 @@ public class GetHikariCPDataSourceInstStrategy implements IGetDataSourceInstStra
         config.setAutoCommit(
                 Boolean.valueOf(properties.getProperty("autoCommit") == null ? "true" : properties.getProperty("autoCommit")));
 //					config.setConnectionInitSql(
-//							dm.get("conn.init.sql") == null ? "" : dm.get("conn.init.sql").toString());
+//							dm.xadatasource("conn.init.sql") == null ? "" : dm.xadatasource("conn.init.sql").toString());
         config.setIdleTimeout(
                 Long.valueOf(properties.getProperty("idleTimeout") == null ? "30000" : properties.getProperty("idleTimeout")));
         config.setPoolName(properties.getProperty("poolName") == null ? "default" : properties.getProperty("poolName"));

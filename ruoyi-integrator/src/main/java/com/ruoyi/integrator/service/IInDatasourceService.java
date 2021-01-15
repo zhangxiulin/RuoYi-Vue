@@ -65,4 +65,11 @@ public interface IInDatasourceService
      *@return:
      */
     boolean synchDs(String datasourceId);
+
+    /**
+     *@Description: 同步Atomikos JTA/XA数据源
+     *@params: [datasourceId]
+     *@return: boolean
+     */
+    boolean synchAtomikos(String datasourceId);
 }

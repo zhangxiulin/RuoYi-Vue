@@ -20,4 +20,8 @@ public class RandomUtils {
         return Math.abs((new Random()).nextInt() % maxNum);
     }
 
+    public static void main(String[] args) {
+        System.out.println(genRandomNum(2));
+    }
+
 }

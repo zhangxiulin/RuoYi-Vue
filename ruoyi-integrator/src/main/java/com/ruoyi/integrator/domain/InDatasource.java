@@ -22,6 +22,10 @@ public class InDatasource extends BaseEntity
     @Excel(name = "数据源名称")
     private String datasourceName;
 
+    /** 数据库厂商 */
+    @Excel(name = "数据库厂商")
+    private String databaseType;
+
     /** 连接池种类 */
     @Excel(name = "连接池种类")
     private String datasourceType;
@@ -29,6 +33,18 @@ public class InDatasource extends BaseEntity
     /** 数据源配置 */
     @Excel(name = "数据源配置")
     private String datasourceOptions;
+
+    /** XA启用 */
+    @Excel(name = "XA启用")
+    private String xaEnabled;
+
+    /** XA数据源类型 */
+    @Excel(name = "XA数据源类型")
+    private String xaDatasourceType;
+
+    /** XA数据源配置 */
+    @Excel(name = "XA数据源配置")
+    private String xaDatasourceOptions;
 
     /** 启用状态（0正常 1停用） */
     @Excel(name = "启用状态", readConverterExp = "0=正常,1=停用")
@@ -80,13 +96,49 @@ public class InDatasource extends BaseEntity
         return status;
     }
 
+    public String getDatabaseType() {
+        return databaseType;
+    }
+
+    public void setDatabaseType(String databaseType) {
+        this.databaseType = databaseType;
+    }
+
+    public String getXaDatasourceType() {
+        return xaDatasourceType;
+    }
+
+    public void setXaDatasourceType(String xaDatasourceType) {
+        this.xaDatasourceType = xaDatasourceType;
+    }
+
+    public String getXaDatasourceOptions() {
+        return xaDatasourceOptions;
+    }
+
+    public void setXaDatasourceOptions(String xaDatasourceOptions) {
+        this.xaDatasourceOptions = xaDatasourceOptions;
+    }
+
+    public String getXaEnabled() {
+        return xaEnabled;
+    }
+
+    public void setXaEnabled(String xaEnabled) {
+        this.xaEnabled = xaEnabled;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("datasourceId", getDatasourceId())
             .append("datasourceName", getDatasourceName())
+            .append("databaseType", getDatabaseType())
             .append("datasourceType", getDatasourceType())
             .append("datasourceOptions", getDatasourceOptions())
+            .append("xaEnabled", getXaEnabled())
+            .append("xaDatasourceType", getXaDatasourceType())
+            .append("xaDatasourceOptions", getXaDatasourceOptions())
             .append("status", getStatus())
             .append("remark", getRemark())
             .append("createBy", getCreateBy())

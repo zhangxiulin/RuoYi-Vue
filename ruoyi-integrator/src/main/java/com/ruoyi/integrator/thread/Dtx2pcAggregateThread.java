@@ -1,7 +1,6 @@
 package com.ruoyi.integrator.thread;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.mysql.cj.jdbc.MysqlXAConnection;
 import com.mysql.cj.jdbc.MysqlXid;
 import com.ruoyi.common.constant.Constants;
@@ -80,7 +79,7 @@ public class Dtx2pcAggregateThread implements Callable<AjaxResult> {
 
             }
 
-            logger.info("聚合服务["+inAggregation.getAgrCode()+"]并行执行（2PC目前只支持并行）");
+            logger.info("聚合服务["+inAggregation.getAgrCode()+"]并行执行（2PC方案目前只支持并行）");
 
             // 判断是否同一个RM（datasource）
             Set<String> rmSet = new HashSet<>();
@@ -104,7 +103,6 @@ public class Dtx2pcAggregateThread implements Callable<AjaxResult> {
                 Object sendData = sendDataList.get(i);
                 InForwardType forwardType = InForwardType.getEnumByCode(inForwardInfo.getForwardType());
                 if (forwardType != null){
-                    // 目前只支持SQL_DML
                     if (InForwardType.SQL_DML == forwardType){
                         if (StringUtils.isNotEmpty(inForwardInfo.getForwardProtocol())){
                             InForwardProtocol forwardProtocolEnum = InForwardProtocol.valueOf(inForwardInfo.getForwardProtocol());
@@ -261,7 +259,7 @@ public class Dtx2pcAggregateThread implements Callable<AjaxResult> {
                                                 // 原因：连接池通常包装了一个真实的真实的Connection实例
                                                 // 解决方案：增加此代码，将Connection转换为XXXConnection
                                                 //
-                                                xaConnection = new MysqlXAConnection(connection.unwrap(com.mysql.cj.jdbc.JdbcConnection.class), logXaCommands);
+                                                //xaConnection = new MysqlXAConnection(connection.unwrap(com.mysql.cj.api.jdbc.JdbcConnection.class), logXaCommands);
                                                 rm = xaConnection.getXAResource();
                                                 // TM生成RM上的事务分支id
                                                 byte[] bqual = ("b" + i).getBytes();
@@ -328,23 +326,7 @@ public class Dtx2pcAggregateThread implements Callable<AjaxResult> {
                                                         }
                                                     }
 
-                                                    JSONArray jsonArray = new JSONArray();
-                                                    if (table != null){
-                                                        Map<String, Integer> colMap = table.getColMap();
-                                                        Object[][] tempResult = table.getTempResult();
-                                                        if (tempResult != null){
-                                                            for (int g=0, leng=tempResult.length; g<leng; g++){
-                                                                JSONObject jsonObject = new JSONObject();
-                                                                Set<String> colKeySet = colMap.keySet();
-                                                                Iterator<String> iterator = colKeySet.iterator();
-                                                                while (iterator.hasNext()){
-                                                                    String colName = iterator.next();
-                                                                    jsonObject.put(colName, tempResult[g][colMap.get(colName)]);
-                                                                }
-                                                                jsonArray.add(jsonObject);
-                                                            }
-                                                        }
-                                                    }
+                                                    JSONArray jsonArray = TableUtils.table2Json(table);
                                                     ajaxResult = AjaxResult.success("转发编号["+inForwardInfo.getForwardCode()+"]转发成功", jsonArray.toJSONString());
                                                     fwdAjaxResultList.add(ajaxResult);
 
@@ -389,6 +371,7 @@ public class Dtx2pcAggregateThread implements Callable<AjaxResult> {
             boolean onePhase = false;
             if (rmSet.size() == 1){  // 如果需要增删改的数据都在同一个RM上，TM可以使用一阶段提交
                 onePhase = true;
+                logger.info("聚合服务["+inAggregation.getAgrCode()+"] 分布式事务[2PC] 需要增删改的数据都在同一个RM上，TM优化为一阶段提交");
             }
 
             // 所有事务分支都prepare成功，提交所有事务分支
@@ -408,7 +391,7 @@ public class Dtx2pcAggregateThread implements Callable<AjaxResult> {
                 for (int i=0,len=rmList.size(); i<len; i++){
                     rmList.get(i).rollback(xidList.get(i));
                 }
-                ajaxResult = AjaxResult.error("内部服务出现错误", fwdAjaxResultList);
+                ajaxResult = AjaxResult.error("内部服务出现错误，最终回滚", fwdAjaxResultList);
             }
         }
         logger.info("聚合服务["+inAggregation.getAgrCode()+"] 分布式事务[2PC] 处理结束.");

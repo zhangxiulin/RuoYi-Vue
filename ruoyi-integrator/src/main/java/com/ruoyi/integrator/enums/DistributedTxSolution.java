@@ -2,6 +2,10 @@ package com.ruoyi.integrator.enums;
 
 /**
  * @description: 分布式事务解决方案种类
+ *
+ * DTP模型定义了两阶段提交，XA规范在此基础上定义了RM-TM的交互接口，还对两阶段提交协议进行了优化
+ * JTA可以看做XA规范的java版本，由于Tomcat不像EJB Server那样实现了JTA规范，因此并不能提供事务管理器的功能，需要借助Atomikos这种第三方的事务管理器类库
+ *
  * @author: zhangxiulin
  * @time: 2020/12/24 12:55
  */

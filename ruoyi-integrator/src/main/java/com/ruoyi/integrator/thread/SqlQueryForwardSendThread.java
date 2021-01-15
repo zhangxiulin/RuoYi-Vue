@@ -81,7 +81,7 @@ public class SqlQueryForwardSendThread implements Callable<AjaxResult> {
                                         JSONObject forwardVarJsonObj = JSONObject.parseObject(forwardVar);
                                         if (forwardVarJsonObj != null){
                                             forwardVarJsonObj.forEach((k, v) -> {
-                                                finalVar.put(String.valueOf(v), sendVar.get(k));
+                                                finalVar.put(String.valueOf(v), sendVar.xadatasource(k));
                                             });
                                             forwardSql = VelocityUtils2.evaluate(forwardSql, finalVar);
                                         }

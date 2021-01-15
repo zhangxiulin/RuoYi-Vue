@@ -10,7 +10,17 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="种类" prop="datasourceType">
+      <el-form-item label="厂商" prop="databaseType">
+        <el-select v-model="queryParams.databaseType" placeholder="请选择数据库厂商" clearable size="small">
+          <el-option
+            v-for="dict in databaseTypeOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="连接池" prop="datasourceType">
         <el-select v-model="queryParams.datasourceType" placeholder="请选择连接池种类" clearable size="small">
           <el-option
             v-for="dict in datasourceTypeOptions"
@@ -82,8 +92,11 @@
       <el-table-column type="selection" width="55" align="center" />
       <!--<el-table-column label="主键ID" align="center" prop="datasourceId" /> -->
       <el-table-column label="数据源名称" align="center" prop="datasourceName" />
+      <el-table-column label="数据库厂商" align="center" prop="databaseType" :formatter="databaseTypeFormat" />
       <el-table-column label="连接池种类" align="center" prop="datasourceType" :formatter="datasourceTypeFormat" />
       <el-table-column label="数据源配置" align="center" prop="datasourceOptions" :show-overflow-tooltip=true  />
+      <el-table-column label="XA启用" align="center" prop="xaEnabled" :formatter="xaEnabledFormat" />
+      <el-table-column label="XA数据源类型" align="center" prop="xaDatasourceType" :formatter="xaDatasourceTypeFormat" />
       <el-table-column label="启用状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip=true  />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -107,8 +120,15 @@
             size="small"
             icon="el-icon-refresh"
             @click="handleSynchDs(scope.row)"
-            v-hasPermi="['tool:gen:edit']"
+            v-hasPermi="['integrator:datasource:synchDs']"
           >同步</el-button>
+          <el-button
+            type="text"
+            size="small"
+            icon="el-icon-refresh"
+            @click="handleSynchAtomikos(scope.row)"
+            v-hasPermi="['integrator:datasource:synchAtomikos']"
+          >同步Atomikos</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -124,34 +144,72 @@
     <!-- 添加或修改数据源对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="数据源名称" prop="datasourceName">
-          <el-input v-model="form.datasourceName" placeholder="请输入数据源名称" />
-        </el-form-item>
-        <el-form-item label="连接池种类" prop="datasourceType">
-          <el-select v-model="form.datasourceType" placeholder="请选择连接池种类" @change="datasouceTypeChange" >
-            <el-option
-              v-for="dict in datasourceTypeOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="数据源配置" prop="datasourceOptions">
-          <el-input v-model="form.datasourceOptions" type="textarea" placeholder="请输入内容（json格式）" />
-        </el-form-item>
-        <el-form-item label="启用状态">
-          <el-radio-group v-model="form.status">
-            <el-radio
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{dict.dictLabel}}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
+        <el-tabs tab-position="left" style="height: 400px;">
+          <el-tab-pane label="基础配置">
+            <el-form-item label="数据源名称" prop="datasourceName">
+              <el-input v-model="form.datasourceName" placeholder="请输入数据源名称" />
+            </el-form-item>
+            <el-form-item label="数据库厂商" prop="databaseType">
+              <el-select v-model="form.databaseType" placeholder="请选择数据库厂商">
+                <el-option
+                  v-for="dict in databaseTypeOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="连接池种类" prop="datasourceType">
+              <el-select v-model="form.datasourceType" placeholder="请选择连接池种类" @change="datasouceTypeChange" >
+                <el-option
+                  v-for="dict in datasourceTypeOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="数据源配置" prop="datasourceOptions">
+              <el-input v-model="form.datasourceOptions" type="textarea" placeholder="请输入内容（json格式）" />
+            </el-form-item>
+            <el-form-item label="启用状态">
+              <el-radio-group v-model="form.status">
+                <el-radio
+                  v-for="dict in statusOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                >{{dict.dictLabel}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+            </el-form-item>
+          </el-tab-pane>
+          <el-tab-pane label="XA">
+            <el-form-item label="XA启用">
+              <el-radio-group v-model="form.xaEnabled">
+                <el-radio
+                  v-for="dict in xaEnabledOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                >{{dict.dictLabel}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="XA数据源类型" prop="xaDatasourceType">
+              <el-select v-model="form.xaDatasourceType" placeholder="请选择XA数据源类型">
+                <el-option
+                  v-for="dict in xaDatasourceTypeOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="XA数据源配置" prop="xaDatasourceOptions">
+              <el-input v-model="form.xaDatasourceOptions" type="textarea" placeholder="请输入内容（json格式）" />
+            </el-form-item>
+          </el-tab-pane>
+        </el-tabs>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -162,7 +220,7 @@
 </template>
 
 <script>
-import { listDatasource, getDatasource, delDatasource, addDatasource, updateDatasource, exportDatasource, synchDs } from "@/api/integrator/datasource";
+import { listDatasource, getDatasource, delDatasource, addDatasource, updateDatasource, exportDatasource, synchDs, synchAtomikos } from "@/api/integrator/datasource";
 
 export default {
   name: "Datasource",
@@ -187,16 +245,23 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 数据库厂商字典
+      databaseTypeOptions: [],
       // 连接池种类字典
       datasourceTypeOptions: [],
       // 启用状态字典
       statusOptions: [],
+      // XA数据源类型字典
+      xaDatasourceTypeOptions: [],
+      // XA启用字典
+      xaEnabledOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
         datasourceName: null,
-        datasourceOptions: null,
+        databaseType: null,
+        datasourceType: null,
         status: null,
       },
       // 表单参数
@@ -245,15 +310,25 @@ export default {
         "maximumPoolSize":"20",
         "minimumIdle":"5"
       },
+      xaDatasourceTypeOptions:[],
     };
   },
   created() {
     this.getList();
+    this.getDicts("in_database_type").then(response => {
+      this.databaseTypeOptions = response.data;
+    });
     this.getDicts("in_datasource_type").then(response => {
       this.datasourceTypeOptions = response.data;
     });
     this.getDicts("sys_normal_disable").then(response => {
       this.statusOptions = response.data;
+    });
+    this.getDicts("in_xa_datasource_type").then(response => {
+      this.xaDatasourceTypeOptions = response.data;
+    });
+    this.getDicts("sys_yes_no").then(response => {
+      this.xaEnabledOptions = response.data;
     });
   },
   methods: {
@@ -266,6 +341,10 @@ export default {
         this.loading = false;
       });
     },
+    // 数据库厂商字典翻译
+    databaseTypeFormat(row, column) {
+      return this.selectDictLabel(this.databaseTypeOptions, row.databaseType);
+    },
     // 连接池种类字典翻译
     datasourceTypeFormat(row, column) {
       return this.selectDictLabel(this.datasourceTypeOptions, row.datasourceType);
@@ -273,6 +352,14 @@ export default {
     // 启用状态字典翻译
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status);
+    },
+    // XA启用字典翻译
+    xaEnabledFormat(row, column) {
+      return this.selectDictLabel(this.xaEnabledOptions, row.xaEnabled);
+    },
+    // XA数据源类型字典翻译
+    xaDatasourceTypeFormat(row, column) {
+      return this.selectDictLabel(this.xaDatasourceTypeOptions, row.xaDatasourceType);
     },
     // 取消按钮
     cancel() {
@@ -284,8 +371,12 @@ export default {
       this.form = {
         datasourceId: null,
         datasourceName: null,
+        databaseType: "MYSQL",
         datasourceType: "Druid",
         datasourceOptions: JSON.stringify(this.druidDemo),
+        xaEnabled: "Y",
+        xaDatasourceType: null,
+        xaDatasourceOptions: null,
         status: "0",
         remark: null,
         createBy: null,
@@ -398,7 +489,29 @@ export default {
         return synchDs(datasourceId);
       }).then(() => {
         this.msgSuccess("同步成功");
-    })
+      })
+    },
+
+    /** 同步数据库操作 */
+    handleSynchAtomikos(row) {
+      const datasourceName = row.datasourceName;
+      const datasourceId = row.datasourceId;
+      // 判断连接池是否支持XA
+      const xaDatasourceType = row.xaDatasourceType;
+      if (!this.xaDatasourceTypeOptions.some(function(item){return item.dictValue == xaDatasourceType})){
+        this.msgError("连接池类型["+xaDatasourceType+"]不支持XA");
+        return;
+      }
+
+      this.$confirm('确认要强制同步"' + datasourceName + '"Atomikos数据源吗？', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return synchAtomikos(datasourceId);
+      }).then(() => {
+        this.msgSuccess("同步成功");
+      })
     }
   }
 };

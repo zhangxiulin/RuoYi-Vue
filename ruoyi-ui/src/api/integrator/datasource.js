@@ -59,3 +59,11 @@ export function synchDs(datasourceId) {
     method: 'get'
   })
 }
+
+// 同步数据源
+export function synchAtomikos(datasourceId) {
+  return request({
+    url: '/integrator/datasource/synchAtomikos/' + datasourceId,
+    method: 'get'
+  })
+}

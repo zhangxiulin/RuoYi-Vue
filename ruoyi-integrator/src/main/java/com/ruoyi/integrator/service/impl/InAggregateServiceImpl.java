@@ -92,8 +92,8 @@ public class InAggregateServiceImpl implements IInAggregateService {
                         ajaxResult = AjaxResult.error("聚合服务转发器返回null");
                     }
                 }else{
-                    log.error("聚合服务["+request.getReqId()+"]配置信息不正确");
-                    ajaxResult = AjaxResult.error("聚合服务配置信息不正确");
+                    log.error("聚合服务["+request.getReqId()+"]配置信息不正确，无分布式事务方案");
+                    ajaxResult = AjaxResult.error("聚合服务配置信息不正确，无分布式事务方案");
                 }
             } else {
                 log.info("聚合服务["+request.getReqId()+"]无需分布式事务支持");

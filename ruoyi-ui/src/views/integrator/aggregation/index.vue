@@ -83,6 +83,7 @@
       <el-table-column label="聚合名称" align="center" prop="agrName" />
       <el-table-column label="聚合编号" align="center" prop="agrCode" />
       <el-table-column label="分布式事务" align="center" prop="isDtx" :formatter="isDtxFormat" />
+      <el-table-column label="事务方案" align="center" prop="dtxSolution" :formatter="dtxSolutionOptionsFormat" />
       <el-table-column label="是否异步" align="center" prop="isAsync" :formatter="isAsyncFormat" />
       <el-table-column label="执行顺序" align="center" prop="executionOrder" :formatter="executionOrderFormat" />
       <el-table-column label="启用状态" align="center" prop="status" :formatter="statusFormat" />
@@ -309,6 +310,10 @@
       // 分布式事务字典翻译
       isDtxFormat(row, column) {
         return this.selectDictLabel(this.isDtxOptions, row.isDtx);
+      },
+      // 分布式事务字典翻译
+      dtxSolutionOptionsFormat(row, column) {
+        return this.selectDictLabel(this.dtxSolutionOptions, row.dtxSolution);
       },
       // 是否异步字典翻译
       isAsyncFormat(row, column) {

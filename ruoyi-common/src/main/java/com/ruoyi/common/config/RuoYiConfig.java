@@ -30,6 +30,9 @@ public class RuoYiConfig
     /** 获取地址开关 */
     private static boolean addressEnabled;
 
+    /** 是否开启Atomikos JTA/XA **/
+    private static Boolean atomikosEnabled;
+
     public String getName()
     {
         return name;
@@ -112,5 +115,15 @@ public class RuoYiConfig
     public static String getUploadPath()
     {
         return getProfile() + "/upload";
+    }
+
+    public static boolean isAtomikosEnabled()
+    {
+        return atomikosEnabled;
+    }
+
+    public void setAtomikosEnabled(boolean atomikosEnabled)
+    {
+        RuoYiConfig.atomikosEnabled = atomikosEnabled;
     }
 }

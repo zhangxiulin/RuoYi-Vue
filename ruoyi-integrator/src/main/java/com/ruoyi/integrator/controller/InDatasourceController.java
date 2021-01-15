@@ -114,4 +114,18 @@ public class InDatasourceController extends BaseController
             return AjaxResult.error();
         }
     }
+
+    /**
+     * 同步数据源
+     */
+    @PreAuthorize("@ss.hasPermi('integrator:datasource:synchAtomikos')")
+    @GetMapping("/synchAtomikos/{datasourceId}")
+    public AjaxResult synchAtomikos(@PathVariable String datasourceId)
+    {
+        if (inDatasourceService.synchAtomikos(datasourceId)) {
+            return AjaxResult.success();
+        } else {
+            return AjaxResult.error();
+        }
+    }
 }

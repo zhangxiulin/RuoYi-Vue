@@ -7,8 +7,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="InDatasource" id="InDatasourceResult">
         <result property="datasourceId"    column="datasource_id"    />
         <result property="datasourceName"    column="datasource_name"    />
+        <result property="databaseType"    column="database_type"    />
         <result property="datasourceType"    column="datasource_type"    />
         <result property="datasourceOptions"    column="datasource_options"    />
+        <result property="xaEnabled"    column="xa_enabled"    />
+        <result property="xaDatasourceType"    column="xa_datasource_type"    />
+        <result property="xaDatasourceOptions"    column="xa_datasource_options"    />
         <result property="status"    column="status"    />
         <result property="remark"    column="remark"    />
         <result property="createBy"    column="create_by"    />
@@ -18,15 +22,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectInDatasourceVo">
-        select datasource_id, datasource_name, datasource_type, datasource_options, status, remark, create_by, create_time, update_by, update_time from in_datasource
+        select datasource_id, datasource_name, database_type, datasource_type, datasource_options, xa_enabled, xa_datasource_type, xa_datasource_options, status, remark, create_by, create_time, update_by, update_time from in_datasource
     </sql>
 
     <select id="selectInDatasourceList" parameterType="InDatasource" resultMap="InDatasourceResult">
         <include refid="selectInDatasourceVo"/>
         <where>  
             <if test="datasourceName != null  and datasourceName != ''"> and datasource_name like concat('%', #{datasourceName}, '%')</if>
+            <if test="databaseType != null  and databaseType != ''"> and database_type = #{databaseType}</if>
             <if test="datasourceType != null  and datasourceType != ''"> and datasource_type = #{datasourceType}</if>
             <if test="datasourceOptions != null  and datasourceOptions != ''"> and datasource_options like concat('%', #{datasourceOptions}, '%')</if>
+            <if test="xaEnabled != null  and xaEnabled != ''"> and xa_enabled = #{xaEnabled}</if>
+            <if test="xaDatasourceType != null  and xaDatasourceType != ''"> and xa_datasource_type = #{xaDatasourceType}</if>
+            <if test="xaDatasourceOptions != null  and xaDatasourceOptions != ''"> and xa_datasource_options = #{xaDatasourceOptions}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="remark != null  and remark != ''"> and remark like concat('%', #{remark}, '%')</if>
         </where>
@@ -42,8 +50,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="datasourceId != null">datasource_id,</if>
             <if test="datasourceName != null and datasourceName != ''">datasource_name,</if>
+            <if test="databaseType != null and databaseType != ''">database_type,</if>
             <if test="datasourceType != null and datasourceType != ''">datasource_type,</if>
             <if test="datasourceOptions != null and datasourceOptions != ''">datasource_options,</if>
+            <if test="xaEnabled != null">xa_enabled,</if>
+            <if test="xaDatasourceType != null">xa_datasource_type,</if>
+            <if test="xaDatasourceOptions != null">xa_datasource_options,</if>
             <if test="status != null">status,</if>
             <if test="remark != null">remark,</if>
             <if test="createBy != null">create_by,</if>
@@ -54,8 +66,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="datasourceId != null">#{datasourceId},</if>
             <if test="datasourceName != null and datasourceName != ''">#{datasourceName},</if>
+            <if test="databaseType != null and databaseType != ''">#{databaseType},</if>
             <if test="datasourceType != null and datasourceType != ''">#{datasourceType},</if>
             <if test="datasourceOptions != null and datasourceOptions != ''">#{datasourceOptions},</if>
+            <if test="xaEnabled != null">#{xaEnabled},</if>
+            <if test="xaDatasourceType != null">#{xaDatasourceType},</if>
+            <if test="xaDatasourceOptions != null">#{xaDatasourceOptions},</if>
             <if test="status != null">#{status},</if>
             <if test="remark != null">#{remark},</if>
             <if test="createBy != null">#{createBy},</if>
@@ -69,8 +85,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update in_datasource
         <trim prefix="SET" suffixOverrides=",">
             <if test="datasourceName != null and datasourceName != ''">datasource_name = #{datasourceName},</if>
+            <if test="databaseType != null and databaseType != ''">database_type = #{databaseType},</if>
             <if test="datasourceType != null and datasourceType != ''">datasource_type = #{datasourceType},</if>
             <if test="datasourceOptions != null and datasourceOptions != ''">datasource_options = #{datasourceOptions},</if>
+            <if test="xaEnabled != null">xa_enabled = #{xaEnabled},</if>
+            <if test="xaDatasourceType != null">xa_datasource_type = #{xaDatasourceType},</if>
+            <if test="xaDatasourceOptions != null">xa_datasource_options = #{xaDatasourceOptions},</if>
             <if test="status != null">status = #{status},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
