@@ -20,8 +20,23 @@ public class RandomUtils {
         return Math.abs((new Random()).nextInt() % maxNum);
     }
 
+    public static String genRandomCharAndNumr(int length) {
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < length; i++){
+            if (random.nextBoolean()){
+                sb.append((char)(65+random.nextInt(26)));
+            }else {
+                sb.append(String.valueOf(random.nextInt(10)));
+            }
+        }
+        return sb.toString();
+    }
+
     public static void main(String[] args) {
         System.out.println(genRandomNum(2));
+
+        System.out.println(genRandomCharAndNumr(4));
     }
 
 }

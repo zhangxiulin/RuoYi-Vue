@@ -73,10 +73,16 @@
             <artifactId>ruoyi-generator</artifactId>
         </dependency>
 
-        <!-- 代码生成-->
+        <!-- 统合前置-->
         <dependency>
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-integrator</artifactId>
+        </dependency>
+
+        <!-- 案例项目-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-demo</artifactId>
         </dependency>
 
     </dependencies>

@@ -20,9 +20,9 @@ import org.springframework.stereotype.Component;
  * @time: 2020/12/27 21:32
  */
 @Component
-public class InDtxAtomikosAggregateStrategy implements IInAggregateStrategy {
+public class InDtxAtomikosAggregateStrategyImpl implements IInAggregateStrategy {
 
-    private static final Logger log = LoggerFactory.getLogger(InDtxAtomikosAggregateStrategy.class);
+    private static final Logger log = LoggerFactory.getLogger(InDtxAtomikosAggregateStrategyImpl.class);
 
     @Autowired
     @Qualifier("threadPoolTaskExecutor")

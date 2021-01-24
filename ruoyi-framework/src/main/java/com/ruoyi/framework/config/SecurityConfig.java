@@ -98,8 +98,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .authorizeRequests()
                 // 对于登录login 验证码captchaImage 允许匿名访问
                 .antMatchers("/login", "/captchaImage").anonymous()
+
+                // 其他方式控制
                 .antMatchers("/integrator/forward").anonymous()
                 .antMatchers("/integrator/aggr").anonymous()
+                .antMatchers("/demo/accountWaterTcc/tryIncome").anonymous()
+                .antMatchers("/demo/accountWaterTcc/tryPay").anonymous()
+                .antMatchers("/demo/accountWaterTcc/confirm").anonymous()
+                .antMatchers("/demo/accountWaterTcc/cancel").anonymous()
+
                 .antMatchers(
                         HttpMethod.GET,
                         "/*.html",

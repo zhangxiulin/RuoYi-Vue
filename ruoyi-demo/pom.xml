@@ -9,18 +9,18 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ruoyi-transaction</artifactId>
-
+    <artifactId>ruoyi-demo</artifactId>
     <description>
-        分布式事务模块
+        示例代码
     </description>
 
     <dependencies>
 
-    <dependency>
-        <groupId>com.ruoyi</groupId>
-        <artifactId>ruoyi-framework</artifactId>
-    </dependency>
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-framework</artifactId>
+        </dependency>
 
     </dependencies>
+
 </project>

@@ -1,5 +1,6 @@
 package com.ruoyi.common.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -122,8 +123,9 @@ public class RuoYiConfig
         return atomikosEnabled;
     }
 
-    public void setAtomikosEnabled(boolean atomikosEnabled)
-    {
+    public void setAtomikosEnabled(Boolean atomikosEnabled) {
         RuoYiConfig.atomikosEnabled = atomikosEnabled;
     }
+
+
 }

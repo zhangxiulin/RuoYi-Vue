@@ -7,13 +7,9 @@ import com.ruoyi.integrator.service.IInAggregateForwardStrategy;
 import com.ruoyi.integrator.thread.SqlDmlForwardSendThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CompletionService;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 /**
@@ -22,9 +18,9 @@ import java.util.concurrent.Future;
  * @time: 2020/12/8 10:16
  */
 @Component
-public class InSqlDmlAggregateForwardStrategy implements IInAggregateForwardStrategy {
+public class InSqlDmlAggregateForwardStrategyImpl implements IInAggregateForwardStrategy {
 
-    private static final Logger log = LoggerFactory.getLogger(InSqlDmlAggregateForwardStrategy.class);
+    private static final Logger log = LoggerFactory.getLogger(InSqlDmlAggregateForwardStrategyImpl.class);
 
 
     @Override
