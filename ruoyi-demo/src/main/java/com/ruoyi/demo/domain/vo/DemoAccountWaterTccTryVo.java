@@ -18,7 +18,7 @@ public class DemoAccountWaterTccTryVo
     private static final long serialVersionUID = 1L;
 
     /** 客户号 */
-    private String userCode;
+    private String account;
 
     /** 借贷标志 */
     private String jdFlag;
@@ -26,12 +26,12 @@ public class DemoAccountWaterTccTryVo
     /** 借、贷金额 */
     private BigDecimal money;
 
-    public String getUserCode() {
-        return userCode;
+    public String getAccount() {
+        return account;
     }
 
-    public void setUserCode(String userCode) {
-        this.userCode = userCode;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     public String getJdFlag() {
@@ -53,7 +53,7 @@ public class DemoAccountWaterTccTryVo
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("userCode", getUserCode())
+            .append("account", getAccount())
             .append("jdFlag", getJdFlag())
             .append("money", getMoney())
             .toString();

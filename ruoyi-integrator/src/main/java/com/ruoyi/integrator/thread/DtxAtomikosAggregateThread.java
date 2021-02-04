@@ -78,7 +78,7 @@ public class DtxAtomikosAggregateThread implements Callable<AjaxResult> {
                         sendVar = (Map<String, Object>) sendVarList.get(i);
                     }
                     Object sendData = sendDataList.get(i);
-                    InForwardType forwardType = InForwardType.getEnumByCode(inForwardInfo.getForwardType());
+                    InForwardType forwardType = InForwardType.valueOf(inForwardInfo.getForwardType());
                     if (forwardType != null) {
                         if (InForwardType.SQL_DML == forwardType) {
                             if (StringUtils.isNotEmpty(inForwardInfo.getForwardProtocol())) {

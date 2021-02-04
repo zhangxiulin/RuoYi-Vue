@@ -55,7 +55,7 @@ public class NoneDtxAggregateThread  implements Callable<AjaxResult> {
                     Object sendVar = sendVarList.get(i);
                     Object sendData = sendDataList.get(i);
                     InForwardRequestVo inForwardRequestVo = new InForwardRequestVo();
-                    inForwardRequestVo.setReqId(inForwardInfo.getInfoId());
+                    inForwardRequestVo.setReqId(inForwardInfo.getForwardCode());
                     inForwardRequestVo.setInForwardInfo(inForwardInfo);
                     inForwardRequestVo.setVar((Map) sendVar);
                     if (sendData instanceof List){
@@ -64,7 +64,7 @@ public class NoneDtxAggregateThread  implements Callable<AjaxResult> {
                         inForwardRequestVo.setData((Map) sendData);
                     }
                     InAggregateForwardContext inForwardContext = SpringUtils.getBean(InAggregateForwardContext.class);
-                    InForwardType forwardType = InForwardType.getEnumByCode(inForwardInfo.getForwardType());
+                    InForwardType forwardType = InForwardType.valueOf(inForwardInfo.getForwardType());
                     if (forwardType != null){
                         AjaxResult fwdAjaxResult = inForwardContext.forward(forwardType, inForwardRequestVo);
                         fwdAjaxResultList.add(fwdAjaxResult);
@@ -97,7 +97,7 @@ public class NoneDtxAggregateThread  implements Callable<AjaxResult> {
                     }
                     Object sendData = sendDataList.get(i);
                     InForwardRequestVo inForwardRequestVo = new InForwardRequestVo();
-                    inForwardRequestVo.setReqId(inForwardInfo.getInfoId());
+                    inForwardRequestVo.setReqId(inForwardInfo.getForwardCode());
                     inForwardRequestVo.setInForwardInfo(inForwardInfo);
                     inForwardRequestVo.setVar((Map) sendVar);
                     if (sendData instanceof List){
@@ -106,7 +106,7 @@ public class NoneDtxAggregateThread  implements Callable<AjaxResult> {
                         inForwardRequestVo.setData((Map) sendData);
                     }
                     InAggregateForwardContext inForwardContext = SpringUtils.getBean(InAggregateForwardContext.class);
-                    InForwardType forwardType = InForwardType.getEnumByCode(inForwardInfo.getForwardType());
+                    InForwardType forwardType = InForwardType.valueOf(inForwardInfo.getForwardType());
                     if (forwardType != null){
                         inForwardContext.submitForward(completionService, forwardType, inForwardRequestVo);
                     }

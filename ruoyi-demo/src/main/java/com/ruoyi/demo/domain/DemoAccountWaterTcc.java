@@ -43,6 +43,10 @@ public class DemoAccountWaterTcc extends BaseEntity
     @Excel(name = "TCC阶段")
     private String tccStage;
 
+    /** 过期时间 */
+    @Excel(name = "过期时间")
+    private String expires;
+
     /** 状态 */
     @Excel(name = "状态")
     private String status;
@@ -120,6 +124,14 @@ public class DemoAccountWaterTcc extends BaseEntity
         return status;
     }
 
+    public String getExpires() {
+        return expires;
+    }
+
+    public void setExpires(String expires) {
+        this.expires = expires;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -130,6 +142,7 @@ public class DemoAccountWaterTcc extends BaseEntity
             .append("jMoney", getjMoney())
             .append("dMoney", getdMoney())
             .append("tccStage", getTccStage())
+            .append("expires", getExpires())
             .append("status", getStatus())
             .append("remark", getRemark())
             .append("createBy", getCreateBy())

@@ -9,6 +9,7 @@ import com.ruoyi.common.utils.CalendarUtils;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.RandomUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.demo.config.TccConfig;
 import com.ruoyi.demo.domain.DemoAccountWaterTcc;
 import com.ruoyi.demo.domain.vo.DemoAccountWaterTccTryVo;
 import com.ruoyi.demo.domain.vo.DemoTransferMoneyTccCancelVo;
@@ -16,7 +17,6 @@ import com.ruoyi.demo.domain.vo.DemoTransferMoneyTccConfirmVo;
 import com.ruoyi.demo.enums.JieDai;
 import com.ruoyi.demo.mapper.DemoAccountWaterTccMapper;
 import com.ruoyi.demo.service.IDemoAccountWaterTccService;
-import com.ruoyi.framework.config.TccConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,18 +136,21 @@ public class DemoAccountWaterTccServiceImpl implements IDemoAccountWaterTccServi
                 return ajaxResult;
             }
             demoAccountWaterTcc.setJdFlag(tryVo.getJdFlag());
-            demoAccountWaterTcc.setUserCode(tryVo.getUserCode());
+            demoAccountWaterTcc.setUserCode(tryVo.getAccount());
             demoAccountWaterTcc.setTccStage(TccStage.TRIED.name());
             demoAccountWaterTcc.setStatus(Constants.STATUS_NORMAL);
             demoAccountWaterTcc.setCreateTime(DateUtils.getNowDate());
+            // 过期时间
+            String expireTimeStr = CalendarUtils.getExpireTimeStr(tccConfig.getTccExpiresDelayMs());
+            demoAccountWaterTcc.setExpires(expireTimeStr);
             int iCount = this.demoAccountWaterTccMapper.insertDemoAccountWaterTcc(demoAccountWaterTcc);
             if (iCount > 0){
                 String msg = "尝试成功";
                 // 确认url 过期时间
                 TccTryAjaxResult tccTryAjaxResult = TccTryAjaxResult.confirm(tccConfig.getTccConfirmUrl(), tccConfig.getTccCancelUrl(),
-                        CalendarUtils.getExpireTimeStr(tccConfig.getTccExpiresDelayMs()), serialNumber);
+                        expireTimeStr, serialNumber);
                 log.info(msg + "流水号[" + serialNumber + "]", tccTryAjaxResult);
-                ajaxResult = new AjaxResult(HttpStatus.NO_CONTENT, msg, tccTryAjaxResult);
+                ajaxResult = new AjaxResult(HttpStatus.SUCCESS, msg, tccTryAjaxResult);
             } else {
                 String msg = "尝试失败";
                 log.error(msg + "，流水号[" + serialNumber + "]");

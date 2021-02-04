@@ -5,17 +5,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 import java.security.cert.X509Certificate;
+import java.util.Map;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
+import com.alibaba.fastjson.JSONObject;
+import com.ruoyi.common.enums.HttpMethod;
+import com.ruoyi.common.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.ruoyi.common.constant.Constants;
@@ -154,7 +156,7 @@ public class HttpUtils
         }
         catch (Exception e)
         {
-            log.error("调用HttpsUtil.sendPost Exception, url=" + url + ",param=" + param, e);
+            log.error("调用HttpsUtils.sendPost Exception, url=" + url + ",param=" + param, e);
         }
         finally
         {
@@ -227,7 +229,287 @@ public class HttpUtils
         }
         catch (Exception e)
         {
-            log.error("调用HttpsUtil.sendSSLPost Exception, url=" + url + ",param=" + param, e);
+            log.error("调用HttpsUtils.sendSSLPost Exception, url=" + url + ",param=" + param, e);
+        }
+        return result.toString();
+    }
+
+    /**
+     * GET方式提交
+     */
+    public static String sendGet( String url, Map<String, Object> paraMap) throws Exception{
+        String queryString = "";
+        if (paraMap != null){
+            StringBuilder psb = new StringBuilder();
+            paraMap.forEach((k, v) -> {
+                psb.append(k).append("=").append(String.valueOf(v)).append("&");
+            });
+            if (psb.length() > 0){
+                queryString = psb.substring(0, psb.length() - 1);
+            }
+        }
+        return sendGet(url, queryString);
+    }
+
+    public static String sendJsonPost(String url, Map<String, Object> paraMap) throws Exception{
+        PrintWriter out = null;
+        BufferedReader in = null;
+        StringBuilder result = new StringBuilder();
+        try
+        {
+            String urlNameString = url;
+            log.info("sendJsonPost - {}", urlNameString);
+            URL realUrl = new URL(urlNameString);
+            URLConnection conn = realUrl.openConnection();
+            conn.setRequestProperty("accept", "*/*");
+            conn.setRequestProperty("connection", "Keep-Alive");
+            conn.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+            conn.setRequestProperty("Accept-Charset", "utf-8");
+            conn.setRequestProperty("Content-Type","application/json; charset=UTF-8");
+            conn.setRequestProperty("accept","application/json");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setConnectTimeout(20000);
+            conn.setReadTimeout(20000);
+            out = new PrintWriter(conn.getOutputStream());
+
+            String json = "";
+            try {
+                json = new JSONObject(paraMap).toJSONString();
+                log.debug("数据处理完成: " + json);
+            } catch (RuntimeException e) {
+                log.error("数据转换失败", e);
+                throw new Exception("数据转换失败", e);
+            } catch (Exception e) {
+                log.error("数据转换失败", e);
+                throw new Exception("数据转换失败", e);
+            }
+            if (StringUtils.isNotEmpty(json)){
+                out.print(json);
+                out.flush();
+                in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+                String line;
+                while ((line = in.readLine()) != null)
+                {
+                    result.append(line);
+                }
+            }
+
+            log.info("recv - {}", result);
+        }
+        catch (ConnectException e)
+        {
+            log.error("调用HttpUtils.sendJsonPost ConnectException, url=" + url + ",param=" + paraMap, e);
+            throw e;
+        }
+        catch (SocketTimeoutException e)
+        {
+            log.error("调用HttpUtils.sendJsonPost SocketTimeoutException, url=" + url + ",param=" + paraMap, e);
+            throw e;
+        }
+        catch (IOException e)
+        {
+            log.error("调用HttpUtils.sendJsonPost IOException, url=" + url + ",param=" + paraMap, e);
+            throw e;
+        }
+        catch (Exception e)
+        {
+            log.error("调用HttpUtils.sendJsonPost Exception, url=" + url + ",param=" + paraMap, e);
+            throw e;
+        }
+        finally
+        {
+            try
+            {
+                if (out != null)
+                {
+                    out.close();
+                }
+                if (in != null)
+                {
+                    in.close();
+                }
+            }
+            catch (IOException ex)
+            {
+                log.error("调用in.close Exception, url=" + url + ",param=" + paraMap, ex);
+            }
+        }
+        return result.toString();
+    }
+
+    public static String sendJsonPut(String url, Map<String, Object> paraMap) throws Exception{
+        PrintWriter out = null;
+        BufferedReader in = null;
+        StringBuilder result = new StringBuilder();
+        try
+        {
+            String urlNameString = url;
+            log.info("sendJsonPost - {}", urlNameString);
+            URL realUrl = new URL(urlNameString);
+            HttpURLConnection conn = (HttpURLConnection) realUrl.openConnection();
+            conn.setRequestProperty("accept", "*/*");
+            conn.setRequestProperty("connection", "Keep-Alive");
+            conn.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+            conn.setRequestProperty("Accept-Charset", "utf-8");
+            conn.setRequestProperty("Content-Type","application/json; charset=UTF-8");
+            conn.setRequestProperty("accept","application/json");
+            conn.setRequestMethod(HttpMethod.PUT.name());
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setConnectTimeout(20000);
+            conn.setReadTimeout(20000);
+            out = new PrintWriter(conn.getOutputStream());
+
+            String json = "";
+            try {
+                json = new JSONObject(paraMap).toJSONString();
+                log.debug("数据处理完成: " + json);
+            } catch (RuntimeException e) {
+                log.error("数据转换失败", e);
+                throw new Exception("数据转换失败", e);
+            } catch (Exception e) {
+                log.error("数据转换失败", e);
+                throw new Exception("数据转换失败", e);
+            }
+            if (StringUtils.isNotEmpty(json)){
+                out.print(json);
+                out.flush();
+                in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+                String line;
+                while ((line = in.readLine()) != null)
+                {
+                    result.append(line);
+                }
+            }
+
+            log.info("recv - {}", result);
+        }
+        catch (ConnectException e)
+        {
+            log.error("调用HttpUtils.sendJsonPut ConnectException, url=" + url + ",param=" + paraMap, e);
+            throw e;
+        }
+        catch (SocketTimeoutException e)
+        {
+            log.error("调用HttpUtils.sendJsonPut SocketTimeoutException, url=" + url + ",param=" + paraMap, e);
+            throw e;
+        }
+        catch (IOException e)
+        {
+            log.error("调用HttpUtils.sendJsonPut IOException, url=" + url + ",param=" + paraMap, e);
+            throw e;
+        }
+        catch (Exception e)
+        {
+            log.error("调用HttpsUtils.sendJsonPut Exception, url=" + url + ",param=" + paraMap, e);
+            throw e;
+        }
+        finally
+        {
+            try
+            {
+                if (out != null)
+                {
+                    out.close();
+                }
+                if (in != null)
+                {
+                    in.close();
+                }
+            }
+            catch (IOException ex)
+            {
+                log.error("调用in.close Exception, url=" + url + ",param=" + paraMap, ex);
+            }
+        }
+        return result.toString();
+    }
+
+    public static String sendJsonDelete(String url, Map<String, Object> paraMap) throws Exception{
+        PrintWriter out = null;
+        BufferedReader in = null;
+        StringBuilder result = new StringBuilder();
+        try
+        {
+            String urlNameString = url;
+            log.info("sendJsonPost - {}", urlNameString);
+            URL realUrl = new URL(urlNameString);
+            HttpURLConnection conn = (HttpURLConnection) realUrl.openConnection();
+            conn.setRequestProperty("accept", "*/*");
+            conn.setRequestProperty("connection", "Keep-Alive");
+            conn.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+            conn.setRequestProperty("Accept-Charset", "utf-8");
+            conn.setRequestProperty("Content-Type","application/json; charset=UTF-8");
+            conn.setRequestProperty("accept","application/json");
+            conn.setRequestMethod(HttpMethod.DELETE.name());
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setConnectTimeout(20000);
+            conn.setReadTimeout(20000);
+            out = new PrintWriter(conn.getOutputStream());
+
+            String json = "";
+            try {
+                json = new JSONObject(paraMap).toJSONString();
+                log.debug("数据处理完成: " + json);
+            } catch (RuntimeException e) {
+                log.error("数据转换失败", e);
+                throw new Exception("数据转换失败", e);
+            } catch (Exception e) {
+                log.error("数据转换失败", e);
+                throw new Exception("数据转换失败", e);
+            }
+            if (StringUtils.isNotEmpty(json)){
+                out.print(json);
+                out.flush();
+                in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+                String line;
+                while ((line = in.readLine()) != null)
+                {
+                    result.append(line);
+                }
+            }
+
+            log.info("recv - {}", result);
+        }
+        catch (ConnectException e)
+        {
+            log.error("调用HttpUtils.sendJsonDelete ConnectException, url=" + url + ",param=" + paraMap, e);
+            throw e;
+        }
+        catch (SocketTimeoutException e)
+        {
+            log.error("调用HttpUtils.sendJsonDelete SocketTimeoutException, url=" + url + ",param=" + paraMap, e);
+            throw e;
+        }
+        catch (IOException e)
+        {
+            log.error("调用HttpUtils.sendJsonDelete IOException, url=" + url + ",param=" + paraMap, e);
+            throw e;
+        }
+        catch (Exception e)
+        {
+            log.error("调用HttpsUtils.sendJsonDelete Exception, url=" + url + ",param=" + paraMap, e);
+            throw e;
+        }
+        finally
+        {
+            try
+            {
+                if (out != null)
+                {
+                    out.close();
+                }
+                if (in != null)
+                {
+                    in.close();
+                }
+            }
+            catch (IOException ex)
+            {
+                log.error("调用in.close Exception, url=" + url + ",param=" + paraMap, ex);
+            }
         }
         return result.toString();
     }

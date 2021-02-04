@@ -3,6 +3,7 @@ package com.ruoyi.common.core.domain;
 import com.alibaba.fastjson.JSON;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @description: TCC Try 阶段返回报文
@@ -33,6 +34,11 @@ public class TccTryAjaxResult extends HashMap<String, Object> {
 
     public static TccTryAjaxResult confirm(String confirmUri, String cancelUri, String expires, String serialNum) {
         return new TccTryAjaxResult(confirmUri, cancelUri, expires, JSON.toJSONString(new HashMap<String, Object>(){{put(SERIAL_NUMBER, serialNum);}}));
+    }
+
+    public static TccTryAjaxResult downcasting(Map<String, Object> map) {
+        return new TccTryAjaxResult((String) map.get(CONFIRM_URI), (String) map.get(CANCEL_URI),
+                (String) map.get(EXPIRES), (String) map.get(DATA));
     }
 
 }

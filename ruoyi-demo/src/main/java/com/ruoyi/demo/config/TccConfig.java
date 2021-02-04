@@ -1,4 +1,4 @@
-package com.ruoyi.framework.config;
+package com.ruoyi.demo.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -12,13 +12,13 @@ import org.springframework.context.annotation.Configuration;
 public class TccConfig {
 
     /**TCC confirm url**/
-    @Value("${ruoyix.tcc.confirmUrl}")
+    @Value("${ruoyix.tcc.accountWaterTcc.confirmUrl}")
     private String tccConfirmUrl;
 
-    @Value("${ruoyix.tcc.cancelUrl}")
+    @Value("${ruoyix.tcc.accountWaterTcc.cancelUrl}")
     private String tccCancelUrl;
 
-    @Value("${ruoyix.tcc.expiresDelayMs}")
+    @Value("${ruoyix.tcc.accountWaterTcc.expiresDelayMs}")
     private Integer tccExpiresDelayMs;
 
     public void setTccConfirmUrl(String tccConfirmUrl) {

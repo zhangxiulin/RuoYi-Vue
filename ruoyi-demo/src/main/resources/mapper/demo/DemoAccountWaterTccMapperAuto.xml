@@ -12,6 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="jMoney"    column="j_money"    />
         <result property="dMoney"    column="d_money"    />
         <result property="tccStage"    column="tcc_stage"    />
+        <result property="expires"    column="expires"    />
         <result property="status"    column="status"    />
         <result property="remark"    column="remark"    />
         <result property="createBy"    column="create_by"    />
@@ -21,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDemoAccountWaterTccVo">
-        select id, serial_number, user_code, jd_flag, j_money, d_money, tcc_stage, status, remark, create_by, create_time, update_by, update_time from demo_account_water_tcc
+        select id, serial_number, user_code, jd_flag, j_money, d_money, tcc_stage, expires, status, remark, create_by, create_time, update_by, update_time from demo_account_water_tcc
     </sql>
 
     <select id="selectDemoAccountWaterTccList" parameterType="DemoAccountWaterTcc" resultMap="DemoAccountWaterTccResult">
@@ -33,6 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="tccStage != null  and tccStage != ''"> and tcc_stage = #{tccStage}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
+        order by id desc
     </select>
     
     <select id="selectDemoAccountWaterTccById" parameterType="Long" resultMap="DemoAccountWaterTccResult">
@@ -49,6 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="jMoney != null">j_money,</if>
             <if test="dMoney != null">d_money,</if>
             <if test="tccStage != null">tcc_stage,</if>
+            <if test="expires != null">expires,</if>
             <if test="status != null">status,</if>
             <if test="remark != null">remark,</if>
             <if test="createBy != null">create_by,</if>
@@ -63,6 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="jMoney != null">#{jMoney},</if>
             <if test="dMoney != null">#{dMoney},</if>
             <if test="tccStage != null">#{tccStage},</if>
+            <if test="expires != null">#{expires},</if>
             <if test="status != null">#{status},</if>
             <if test="remark != null">#{remark},</if>
             <if test="createBy != null">#{createBy},</if>
@@ -81,6 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="jMoney != null">j_money = #{jMoney},</if>
             <if test="dMoney != null">d_money = #{dMoney},</if>
             <if test="tccStage != null">tcc_stage = #{tccStage},</if>
+            <if test="expires != null">expires = #{expires},</if>
             <if test="status != null">status = #{status},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="createBy != null">create_by = #{createBy},</if>

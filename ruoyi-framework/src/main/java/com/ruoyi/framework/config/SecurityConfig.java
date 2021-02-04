@@ -107,6 +107,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/demo/accountWaterTcc/confirm").anonymous()
                 .antMatchers("/demo/accountWaterTcc/cancel").anonymous()
 
+                .antMatchers("/open/**").anonymous()
+
                 .antMatchers(
                         HttpMethod.GET,
                         "/*.html",

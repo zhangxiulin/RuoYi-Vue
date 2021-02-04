@@ -2,7 +2,7 @@ package com.ruoyi.common.enums;
 
 public enum ExecutionOrder {
 
-    SEQUENCE("0", "顺序"), PARALLEL("1", "并行");
+    SEQUENCE("1", "顺序"), PARALLEL("0", "并行");
 
     private final String code;
     private final String name;

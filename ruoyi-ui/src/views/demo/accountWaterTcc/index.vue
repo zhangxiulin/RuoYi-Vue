@@ -96,6 +96,7 @@
       <el-table-column label="借金额" align="center" prop="jMoney" />
       <el-table-column label="贷金额" align="center" prop="dMoney" />
       <el-table-column label="TCC阶段" align="center" prop="tccStage" :formatter="tccStageFormat" />
+      <el-table-column label="过期时间" align="center" prop="expires" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <!--<el-button
@@ -131,49 +132,6 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改TCC动账流水对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="流水号" prop="serialNumber">
-          <el-input v-model="form.serialNumber" placeholder="请输入流水号" />
-        </el-form-item>
-        <el-form-item label="卡号" prop="userCode">
-          <el-input v-model="form.userCode" placeholder="请输入卡号" />
-        </el-form-item>
-        <el-form-item label="借贷标志">
-          <el-radio-group v-model="form.jdFlag">
-            <el-radio
-              v-for="dict in jdFlagOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{dict.dictLabel}}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="借金额" prop="jMoney">
-          <el-input v-model="form.jMoney" placeholder="请输入借金额" />
-        </el-form-item>
-        <el-form-item label="贷金额" prop="dMoney">
-          <el-input v-model="form.dMoney" placeholder="请输入贷金额" />
-        </el-form-item>
-        <el-form-item label="TCC阶段" prop="tccStage">
-          <el-select v-model="form.tccStage" placeholder="请选择TCC阶段">
-            <el-option
-              v-for="dict in tccStageOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" placeholder="请输入备注" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
 
     <!-- 查看TCC动账流水对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -208,6 +166,9 @@
               :value="dict.dictValue"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="过期时间" prop="expires">
+          <el-input v-model="form.expires" placeholder="请输入过期时间"  :disabled="isView" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入备注"  :disabled="isView" />
@@ -328,6 +289,7 @@ export default {
         jMoney: null,
         dMoney: null,
         tccStage: null,
+        expires: null,
         status: "0",
         remark: null,
         createBy: null,

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.integrator.mapper.InAppAccessMapper">
+    
+    <resultMap type="InAppAccess" id="InAppAccessResult">
+        <result property="appId"    column="app_id"    />
+        <result property="appKey"    column="app_key"    />
+        <result property="appSecret"    column="app_secret"    />
+        <result property="appCnName"    column="app_cn_name"    />
+        <result property="appEnCode"    column="app_en_code"    />
+        <result property="owner"    column="owner"    />
+        <result property="ownerPhone"    column="owner_phone"    />
+        <result property="ownerEmail"    column="owner_email"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectInAppAccessVo">
+        select app_id, app_key, app_secret, app_cn_name, app_en_code, owner, owner_phone, owner_email, status, remark, create_by, create_time, update_by, update_time from in_app_access
+    </sql>
+
+    <select id="selectInAppAccessList" parameterType="InAppAccess" resultMap="InAppAccessResult">
+        <include refid="selectInAppAccessVo"/>
+        <where>  
+            <if test="appKey != null  and appKey != ''"> and app_key = #{appKey}</if>
+            <if test="appCnName != null  and appCnName != ''"> and app_cn_name like concat('%', #{appCnName}, '%')</if>
+            <if test="appEnCode != null  and appEnCode != ''"> and app_en_code like concat('%', #{appEnCode}, '%')</if>
+            <if test="owner != null  and owner != ''"> and owner like concat('%', #{owner}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectInAppAccessById" parameterType="String" resultMap="InAppAccessResult">
+        <include refid="selectInAppAccessVo"/>
+        where app_id = #{appId}
+    </select>
+        
+    <insert id="insertInAppAccess" parameterType="InAppAccess">
+        insert into in_app_access
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="appId != null">app_id,</if>
+            <if test="appKey != null">app_key,</if>
+            <if test="appSecret != null">app_secret,</if>
+            <if test="appCnName != null">app_cn_name,</if>
+            <if test="appEnCode != null">app_en_code,</if>
+            <if test="owner != null">owner,</if>
+            <if test="ownerPhone != null">owner_phone,</if>
+            <if test="ownerEmail != null">owner_email,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="appId != null">#{appId},</if>
+            <if test="appKey != null">#{appKey},</if>
+            <if test="appSecret != null">#{appSecret},</if>
+            <if test="appCnName != null">#{appCnName},</if>
+            <if test="appEnCode != null">#{appEnCode},</if>
+            <if test="owner != null">#{owner},</if>
+            <if test="ownerPhone != null">#{ownerPhone},</if>
+            <if test="ownerEmail != null">#{ownerEmail},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInAppAccess" parameterType="InAppAccess">
+        update in_app_access
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="appKey != null">app_key = #{appKey},</if>
+            <if test="appSecret != null">app_secret = #{appSecret},</if>
+            <if test="appCnName != null">app_cn_name = #{appCnName},</if>
+            <if test="appEnCode != null">app_en_code = #{appEnCode},</if>
+            <if test="owner != null">owner = #{owner},</if>
+            <if test="ownerPhone != null">owner_phone = #{ownerPhone},</if>
+            <if test="ownerEmail != null">owner_email = #{ownerEmail},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where app_id = #{appId}
+    </update>
+
+    <delete id="deleteInAppAccessById" parameterType="String">
+        delete from in_app_access where app_id = #{appId}
+    </delete>
+
+    <delete id="deleteInAppAccessByIds" parameterType="String">
+        delete from in_app_access where app_id in 
+        <foreach item="appId" collection="array" open="(" separator="," close=")">
+            #{appId}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -32,6 +32,8 @@
         <velocity.version>1.7</velocity.version>
         <jwt.version>0.9.1</jwt.version>
         <jta.version>1.1</jta.version>
+        <httpclient.version>4.5.1</httpclient.version>
+        <guava.version>21.0</guava.version>
     </properties>
 	
     <!-- 依赖声明 -->
@@ -223,6 +225,26 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
+            <!-- 案例项目-->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-open</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 
@@ -236,6 +258,7 @@
         <module>ruoyi-integrator</module>
         <module>ruoyi-transaction</module>
         <module>ruoyi-demo</module>
+        <module>ruoyi-open</module>
     </modules>
     <packaging>pom</packaging>
 
