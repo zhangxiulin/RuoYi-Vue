@@ -116,6 +116,13 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-user"
+            @click="handleIntervene(scope.row)"
+            v-hasPermi="['demo:accountWaterTcc:edit']"
+          >人工干预</el-button>
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-view"
             @click="handleView(scope.row)"
             v-hasPermi="['demo:accountWaterTcc:edit']"
@@ -341,6 +348,9 @@ export default {
         this.isView = true;
         this.title = "TCC动账流水详情";
       });
+    },
+    handleIntervene(row) {
+
     },
     /** 提交按钮 */
     submitForm() {

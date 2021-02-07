@@ -13,6 +13,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="owner"    column="owner"    />
         <result property="ownerPhone"    column="owner_phone"    />
         <result property="ownerEmail"    column="owner_email"    />
+        <result property="servicePartitionDirection"    column="service_partition_direction"    />
+        <result property="certificationUsername"    column="certification_username"    />
+        <result property="certificationPassword"    column="certification_password"    />
         <result property="status"    column="status"    />
         <result property="remark"    column="remark"    />
         <result property="createBy"    column="create_by"    />
@@ -22,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectInAppAccessVo">
-        select app_id, app_key, app_secret, app_cn_name, app_en_code, owner, owner_phone, owner_email, status, remark, create_by, create_time, update_by, update_time from in_app_access
+        select app_id, app_key, app_secret, app_cn_name, app_en_code, owner, owner_phone, owner_email, service_partition_direction, certification_username, certification_password, status, remark, create_by, create_time, update_by, update_time from in_app_access
     </sql>
 
     <select id="selectInAppAccessList" parameterType="InAppAccess" resultMap="InAppAccessResult">
@@ -52,6 +55,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="owner != null">owner,</if>
             <if test="ownerPhone != null">owner_phone,</if>
             <if test="ownerEmail != null">owner_email,</if>
+            <if test="servicePartitionDirection != null">service_partition_direction,</if>
+            <if test="certificationUsername != null">certification_username,</if>
+            <if test="certificationPassword != null">certification_password,</if>
             <if test="status != null">status,</if>
             <if test="remark != null">remark,</if>
             <if test="createBy != null">create_by,</if>
@@ -68,6 +74,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="owner != null">#{owner},</if>
             <if test="ownerPhone != null">#{ownerPhone},</if>
             <if test="ownerEmail != null">#{ownerEmail},</if>
+            <if test="servicePartitionDirection != null">#{servicePartitionDirection},</if>
+            <if test="certificationUsername != null">#{certificationUsername},</if>
+            <if test="certificationPassword != null">#{certificationPassword},</if>
             <if test="status != null">#{status},</if>
             <if test="remark != null">#{remark},</if>
             <if test="createBy != null">#{createBy},</if>
@@ -87,6 +96,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="owner != null">owner = #{owner},</if>
             <if test="ownerPhone != null">owner_phone = #{ownerPhone},</if>
             <if test="ownerEmail != null">owner_email = #{ownerEmail},</if>
+            <if test="servicePartitionDirection != null">service_partition_direction = #{servicePartitionDirection},</if>
+            <if test="certificationUsername != null">certification_username = #{certificationUsername},</if>
+            <if test="certificationPassword != null">certification_password = #{certificationPassword},</if>
             <if test="status != null">status = #{status},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="createBy != null">create_by = #{createBy},</if>

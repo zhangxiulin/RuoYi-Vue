@@ -53,6 +53,18 @@ public class InForwardInfo extends BaseEntity
     /** 变量 */
     private String forwardVar;
 
+    /** 认证启用 */
+    @Excel(name = "认证启用")
+    private String authEnabled;
+
+    /** 认证类型 */
+    @Excel(name = "认证类型")
+    private String authType;
+
+    /** 认证源 */
+    @Excel(name = "认证源")
+    private String authSource;
+
     /** 预编译STMT */
     private String isPreparedStatement;
 
@@ -202,6 +214,30 @@ public class InForwardInfo extends BaseEntity
         return status;
     }
 
+    public String getAuthEnabled() {
+        return authEnabled;
+    }
+
+    public void setAuthEnabled(String authEnabled) {
+        this.authEnabled = authEnabled;
+    }
+
+    public String getAuthType() {
+        return authType;
+    }
+
+    public void setAuthType(String authType) {
+        this.authType = authType;
+    }
+
+    public String getAuthSource() {
+        return authSource;
+    }
+
+    public void setAuthSource(String authSource) {
+        this.authSource = authSource;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -216,6 +252,9 @@ public class InForwardInfo extends BaseEntity
             .append("forwardSql", getForwardSql())
             .append("forwardDatasource", getForwardDatasource())
             .append("forwardVar", getForwardVar())
+            .append("authEnabled", getAuthEnabled())
+            .append("authType", getAuthType())
+            .append("authSource", getAuthSource())
             .append("isPreparedStatement", getIsPreparedStatement())
             .append("rtStatusOk", getRtStatusOk())
             .append("rtStatusError", getRtStatusError())

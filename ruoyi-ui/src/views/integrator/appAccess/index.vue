@@ -98,17 +98,32 @@
     <el-table v-loading="loading" :data="appAccessList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <!--<el-table-column label="主键ID" align="center" prop="appId" />-->
-      <el-table-column label="接入标识" align="center" prop="appKey" />
+      <el-table-column label="接入标识" align="center" prop="appKey" >
+        <template slot-scope="scope">
+          <router-link :to="'/appAccess/forward/data/' + scope.row.appId" class="link-type">
+            <span>{{ scope.row.appKey }}</span>
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column label="接入密码" align="center" prop="appSecret" />
+      <el-table-column label="服务参与方向" align="center" prop="servicePartitionDirection" :formatter="servicePartitionDirectionFormat" />
       <el-table-column label="中文名称" align="center" prop="appCnName" />
       <el-table-column label="英文缩写" align="center" prop="appEnCode" />
       <el-table-column label="负责人" align="center" prop="owner" />
       <!--<el-table-column label="联系电话" align="center" prop="ownerPhone" />
       <el-table-column label="邮箱" align="center" prop="ownerEmail" />-->
+      <el-table-column label="认证用户名" align="center" prop="certificationUsername" />
+      <el-table-column label="认证密码" align="center" prop="certificationPassword" />
       <el-table-column label="启用状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-setting"
+            @click="handleForwardData(scope.row)"
+          >消费权限配置</el-button>
           <el-button
             size="mini"
             type="text"
@@ -137,7 +152,7 @@
 
     <!-- 添加或修改接入应用对话框 -->
     <el-dialog  :title="title" :visible.sync="open" width="1000px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-row>
           <el-col :span="12">
             <el-form-item label="接入标识" prop="appKey">
@@ -145,7 +160,13 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="接入密码" prop="appSecret">
+            <el-form-item  prop="appSecret">
+              <span slot="label">
+                <span>接入密码</span>
+                <el-tooltip class="item" effect="dark" content="入流量时，外部应用作为服务消费方访问服务时的密钥，和应用标识搭配使用" placement="top-start">
+                  <i class="el-icon-question" style="color:darkblue;"></i>
+                </el-tooltip>
+              </span>
               <el-input v-model="form.appSecret" placeholder="请输入接入密码" />
             </el-form-item>
           </el-col>
@@ -181,6 +202,34 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item label="参与方向">
+              <el-checkbox-group v-model="form.servicePartitionDirection">
+                <el-checkbox
+                  v-for="dict in servicePartitionDirectionOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue">
+                  {{dict.dictLabel}}
+                </el-checkbox>
+              </el-checkbox-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item  prop="certificationUsername">
+              <span slot="label">
+                <span>认证用户名</span>
+                <el-tooltip class="item" effect="dark" content="出流量时，外部应用作为服务提供方的请求头认证用户名，和认证密码搭配使用" placement="top-start">
+                  <i class="el-icon-question" style="color:darkblue;"></i>
+                </el-tooltip>
+              </span>
+              <el-input v-model="form.certificationUsername" placeholder="请输入认证用户名" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="认证密码" prop="certificationPassword">
+              <el-input v-model="form.certificationPassword" placeholder="请输入认证密码" />
+            </el-form-item>
           </el-col>
         </el-row>
         <el-form-item label="启用状态">
@@ -231,6 +280,8 @@ export default {
       open: false,
       // 启用状态字典
       statusOptions: [],
+      // 服务参与方向字典
+      servicePartitionDirectionOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -247,9 +298,6 @@ export default {
       rules: {
         appKey: [
           { required: true, message: "接入标识不能为空", trigger: "blur" }
-        ],
-        appSecret: [
-          { required: true, message: "接入密码不能为空", trigger: "blur" }
         ],
         appCnName: [
           { required: true, message: "中文名称不能为空", trigger: "blur" }
@@ -269,6 +317,9 @@ export default {
     this.getDicts("sys_normal_disable").then(response => {
       this.statusOptions = response.data;
     });
+    this.getDicts("in_service_partition_direction").then(response => {
+      this.servicePartitionDirectionOptions = response.data;
+    });
   },
   methods: {
     /** 查询接入应用列表 */
@@ -283,6 +334,10 @@ export default {
     // 启用状态字典翻译
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status);
+    },
+    // 服务参与方向字典翻译
+    servicePartitionDirectionFormat(row, column) {
+      return this.selectDictLabels(this.servicePartitionDirectionOptions, row.servicePartitionDirection?row.servicePartitionDirection:"");
     },
     // 取消按钮
     cancel() {
@@ -300,6 +355,9 @@ export default {
         owner: null,
         ownerPhone: null,
         ownerEmail: null,
+        servicePartitionDirection: [],
+        certificationUsername: null,
+        certificationPassword: null,
         status: "0",
         remark: null,
         createBy: null,
@@ -338,14 +396,20 @@ export default {
       const appId = row.appId || this.ids
       getAppAccess(appId).then(response => {
         this.form = response.data;
+        this.form.servicePartitionDirection = (this.form.servicePartitionDirection?this.form.servicePartitionDirection:"").split(",");
         this.open = true;
         this.title = "修改接入应用";
       });
+    },
+    /** 转发权限配置 **/
+    handleForwardData(row) {
+      this.$router.push('/appAccess/forward/data/' + row.appId);
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          this.form.servicePartitionDirection = this.form.servicePartitionDirection.join(",");
           if (this.form.appId != null) {
             updateAppAccess(this.form).then(response => {
               this.msgSuccess("修改成功");

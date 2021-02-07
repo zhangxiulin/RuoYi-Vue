@@ -117,6 +117,19 @@ export const constantRoutes = [
         meta: { title: '修改生成配置' }
       }
     ]
+  },
+  {
+    path: '/appAccess',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'forward/data/:appId',
+        component: (resolve) => require(['@/views/integrator/appAccessForward/index'], resolve),
+        name: 'AppAccessForward',
+        meta: { title: '应用转发权限', icon: '' }
+      }
+    ]
   }
 ]
 

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.integrator.mapper.InAppAccessForwardMapper">
+
+    <resultMap type="InAppAccessForwardVo" id="InAppAccessForwardVoResult" extends="InAppAccessForwardResult">
+        <result property="appKey"    column="app_key"    />
+        <result property="fwdCode"    column="forward_code"    />
+    </resultMap>
+
+    <select id="selectInAppAccessForwardVoList" parameterType="InAppAccessForward" resultMap="InAppAccessForwardVoResult">
+        select a.*, b.app_key, c.forward_code
+        from in_app_access_forward a , in_app_access b, in_forward_info c
+        <where>
+            a.app_id = b.app_id and a.fwd_id = c.info_id
+            <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
+            <if test="fwdId != null  and fwdId != ''"> and a.fwd_id = #{fwdId}</if>
+            <if test="status != null  and status != ''"> and a.status = #{status}</if>
+        </where>
+    </select>
+    
+</mapper>

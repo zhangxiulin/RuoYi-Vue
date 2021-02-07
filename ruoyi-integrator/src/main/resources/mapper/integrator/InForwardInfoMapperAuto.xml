@@ -16,6 +16,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="forwardSql"    column="forward_sql"    />
         <result property="forwardDatasource"    column="forward_datasource"    />
         <result property="forwardVar"    column="forward_var"    />
+        <result property="authEnabled"    column="auth_enabled"    />
+        <result property="authType"    column="auth_type"    />
+        <result property="authSource"    column="auth_source"    />
         <result property="isPreparedStatement"    column="is_prepared_statement"    />
         <result property="rtStatusOk"    column="rt_status_ok"    />
         <result property="rtStatusError"    column="rt_status_error"    />
@@ -28,7 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectInForwardInfoVo">
-        select info_id, forward_name, forward_code, is_async, forward_type, forward_protocol, forward_url, forward_method, forward_sql, forward_datasource, forward_var, is_prepared_statement, rt_status_ok, rt_status_error, status, remark, create_by, create_time, update_by, update_time from in_forward_info
+        select info_id, forward_name, forward_code, is_async, forward_type, forward_protocol, forward_url, forward_method, forward_sql, forward_datasource, forward_var, auth_enabled, auth_type, auth_source, is_prepared_statement, rt_status_ok, rt_status_error, status, remark, create_by, create_time, update_by, update_time from in_forward_info
     </sql>
 
     <select id="selectInForwardInfoList" parameterType="InForwardInfo" resultMap="InForwardInfoResult">
@@ -65,6 +68,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="forwardSql != null">forward_sql,</if>
             <if test="forwardDatasource != null">forward_datasource,</if>
             <if test="forwardVar != null">forward_var,</if>
+            <if test="authEnabled != null">auth_enabled,</if>
+            <if test="authType != null">auth_type,</if>
+            <if test="authSource != null">auth_source,</if>
             <if test="isPreparedStatement != null">is_prepared_statement,</if>
             <if test="rtStatusOk != null">rt_status_ok,</if>
             <if test="rtStatusError != null">rt_status_error,</if>
@@ -87,6 +93,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="forwardSql != null">#{forwardSql},</if>
             <if test="forwardDatasource != null">#{forwardDatasource},</if>
             <if test="forwardVar != null">#{forwardVar},</if>
+            <if test="authEnabled != null">#{authEnabled},</if>
+            <if test="authType != null">#{authType},</if>
+            <if test="authSource != null">#{authSource},</if>
             <if test="isPreparedStatement != null">#{isPreparedStatement},</if>
             <if test="rtStatusOk != null">#{rtStatusOk},</if>
             <if test="rtStatusError != null">#{rtStatusError},</if>
@@ -112,6 +121,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="forwardSql != null">forward_sql = #{forwardSql},</if>
             <if test="forwardDatasource != null">forward_datasource = #{forwardDatasource},</if>
             <if test="forwardVar != null">forward_var = #{forwardVar},</if>
+            <if test="authEnabled != null">auth_enabled = #{authEnabled},</if>
+            <if test="authType != null">auth_type = #{authType},</if>
+            <if test="authSource != null">auth_source = #{authSource},</if>
             <if test="isPreparedStatement != null">is_prepared_statement = #{isPreparedStatement},</if>
             <if test="rtStatusOk != null">rt_status_ok = #{rtStatusOk},</if>
             <if test="rtStatusError != null">rt_status_error = #{rtStatusError},</if>

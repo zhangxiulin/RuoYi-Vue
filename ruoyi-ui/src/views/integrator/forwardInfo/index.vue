@@ -123,6 +123,8 @@
       <el-table-column label="是否异步" align="center" prop="isAsync" :formatter="isAsyncFormat" />
       <el-table-column label="转发类型" align="center" prop="forwardType" :formatter="forwardTypeFormat" />
       <el-table-column label="转发协议" align="center" prop="forwardProtocol" :formatter="forwardProtocolFormat" />
+      <el-table-column label="认证启用" align="center" prop="authEnabled" :formatter="authEnabledFormat" />
+      <el-table-column label="认证类型" align="center" prop="authType" :formatter="authTypeFormat" />
       <el-table-column label="启用状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip=true />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -220,6 +222,40 @@
                 ></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item prop="authEnabled">
+              <span slot="label">
+                <span>启用认证</span>
+                <el-tooltip class="item" effect="dark" content="转发目标 url 的认证，即 http 头部 Authorization 信息" placement="top-start">
+                  <i class="el-icon-question" style="color:darkblue;"></i>
+                </el-tooltip>
+              </span>
+              <el-radio-group v-model="form.authEnabled">
+                <el-radio
+                  v-for="dict in authEnabledOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                >{{dict.dictLabel}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="认证类型" prop="authType">
+              <el-select v-model="queryParams.authType" placeholder="请选择认证类型" clearable size="small">
+                <el-option
+                  v-for="dict in authTypeOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="认证源" prop="authSource">
+              <el-input
+                v-model="queryParams.authSource"
+                placeholder="请输入认证源"
+                clearable
+                size="small"
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="SQL转发">
             <el-form-item label="SQL" prop="forwardSql">
@@ -295,6 +331,10 @@ export default {
       forwardMethodOptions: [],
       // 预编译STMT字典
       isPreparedStatementOptions: [],
+      // 认证启用字典
+      authEnabledOptions: [],
+      // 认证类型字典
+      authTypeOptions: [],
       // 启用状态字典
       statusOptions: [],
       // 查询参数
@@ -360,6 +400,12 @@ export default {
     this.getDicts("sys_normal_disable").then(response => {
       this.statusOptions = response.data;
     });
+    this.getDicts("sys_yes_no").then(response => {
+      this.authEnabledOptions = response.data;
+    });
+    this.getDicts("in_http_authentication_type").then(response => {
+      this.authTypeOptions = response.data;
+    });
   },
   methods: {
     /** 查询转发配置列表 */
@@ -414,6 +460,9 @@ export default {
         forwardSql: null,
         forwardDatasource: null,
         forwardVar: null,
+        authEnabled: "N",
+        authType: null,
+        authSource: null,
         isPreparedStatement: "N",
         rtStatusOk: null,
         rtStatusError: null,

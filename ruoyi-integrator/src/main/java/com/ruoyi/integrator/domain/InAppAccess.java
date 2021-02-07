@@ -46,6 +46,18 @@ public class InAppAccess extends BaseEntity
     @Excel(name = "邮箱")
     private String ownerEmail;
 
+    /** 服务参与方向 */
+    @Excel(name = "服务参与方向")
+    private String servicePartitionDirection;
+
+    /** 认证用户名 */
+    @Excel(name = "认证用户名")
+    private String certificationUsername;
+
+    /** 认证密码 */
+    @Excel(name = "认证密码")
+    private String certificationPassword;
+
     /** 启用状态（0正常 1停用） */
     @Excel(name = "启用状态", readConverterExp = "0=正常,1=停用")
     private String status;
@@ -132,6 +144,30 @@ public class InAppAccess extends BaseEntity
         return status;
     }
 
+    public String getServicePartitionDirection() {
+        return servicePartitionDirection;
+    }
+
+    public void setServicePartitionDirection(String servicePartitionDirection) {
+        this.servicePartitionDirection = servicePartitionDirection;
+    }
+
+    public String getCertificationUsername() {
+        return certificationUsername;
+    }
+
+    public void setCertificationUsername(String certificationUsername) {
+        this.certificationUsername = certificationUsername;
+    }
+
+    public String getCertificationPassword() {
+        return certificationPassword;
+    }
+
+    public void setCertificationPassword(String certificationPassword) {
+        this.certificationPassword = certificationPassword;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -143,6 +179,9 @@ public class InAppAccess extends BaseEntity
             .append("owner", getOwner())
             .append("ownerPhone", getOwnerPhone())
             .append("ownerEmail", getOwnerEmail())
+            .append("servicePartitionDirection", getServicePartitionDirection())
+            .append("certificationUsername", getCertificationUsername())
+            .append("certificationPassword", getCertificationPassword())
             .append("status", getStatus())
             .append("remark", getRemark())
             .append("createBy", getCreateBy())
