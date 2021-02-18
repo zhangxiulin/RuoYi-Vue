@@ -6,7 +6,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.ruoyi.integrator.domain.InAppAccess;
 import com.ruoyi.integrator.service.IInAppAccessService;
-import com.ruoyi.open.service.IDigestService;
+import com.ruoyi.open.service.IOpenDigestService;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,23 +28,23 @@ import java.util.HashMap;
  * @time: 2021/2/2 22:17
  */
 @Service
-public class DigestServiceImpl implements IDigestService {
+public class OpenDigestServiceImpl implements IOpenDigestService {
 
-    private static final Logger log = LoggerFactory.getLogger(DigestServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(OpenDigestServiceImpl.class);
 
-    private static final String DIGEST = "Digest ";
-    private static final String NONCE = "nonce";
-    private static final String QOP = "qop";
-    private static final String REALM = "realm";
-    private static final String NC = "nc";
-    private static final String CNONCE = "cnonce";
-    private static final String RESPONSE = "response";
-    private static final String URI = "uri";
-    private static final String HEX_LOOKUP = "0123456789abcdef";
-    private static final String USERNAME = "username";
+    public static final String DIGEST = "Digest ";
+    public static final String NONCE = "nonce";
+    public static final String QOP = "qop";
+    public static final String REALM = "realm";
+    public static final String NC = "nc";
+    public static final String CNONCE = "cnonce";
+    public static final String RESPONSE = "response";
+    public static final String URI = "uri";
+    public static final String HEX_LOOKUP = "0123456789abcdef";
+    public static final String USERNAME = "username";
 
-    private static final String realm = "in_";
-    private static final String qop = "auth";
+    public static final String realm = "in_";
+    public static final String qop = "auth";
 
     private static final Charset defaultChatSet;
     private static final MessageDigest md5;
@@ -60,6 +60,7 @@ public class DigestServiceImpl implements IDigestService {
 
     @Autowired
     private IInAppAccessService inAppAccessService;
+
 
     /**
      *  HTTP Digest验证
@@ -80,15 +81,15 @@ public class DigestServiceImpl implements IDigestService {
                 String username = authFields.get(USERNAME);
                 String A1 = calcDigest(username, authFields.get(REALM),
                         getPasswordOfAppAccess(username));//A1 = MD5("usarname:realm:password");
-                String A2 = calcDigest(HttpMethod.POST.toString(), authFields.get(URI));//A2 = MD5("httpmethod:uri");
+                String A2 = calcDigest(httpServletRequest.getMethod(), authFields.get(URI));//A2 = MD5("httpmethod:uri");
                 String oriResponse = calcDigest(A1, authFields.get(NONCE), authFields.get(NC), authFields.get(CNONCE),
                         authFields.get(QOP), A2); //response = MD5("A1:nonce:nc:cnonce:qop:A2");
                 if (oriResponse.equals(newResponse)) {
                     httpResponse.setStatus(HttpStatus.SC_OK);
-                    log.info("success");
+                    log.info("Digest认证成功，username[" + username + "]");
                     return HttpStatus.SC_OK;
                 } else {
-                    log.info("failed!");
+                    log.info("Digest认证失败，username[" + username + "]");
                     httpResponse.setStatus(HttpStatus.SC_UNAUTHORIZED);
                     return HttpStatus.SC_UNAUTHORIZED;
                 }
@@ -123,7 +124,7 @@ public class DigestServiceImpl implements IDigestService {
         return bytesToHexString(md5.digest());
     }
 
-    private static HashMap<String, String> splitAuthFields(String authString) {
+    public static HashMap<String, String> splitAuthFields(String authString) {
         final HashMap<String, String> fields = Maps.newHashMap();
         final CharMatcher trimmer = CharMatcher.anyOf("\"\t ");
         final Splitter commas = Splitter.on(',').trimResults().omitEmptyStrings();

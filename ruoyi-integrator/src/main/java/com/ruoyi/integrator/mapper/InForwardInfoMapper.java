@@ -15,7 +15,7 @@ public interface InForwardInfoMapper extends InForwardInfoMapperAuto
 
     List<InForwardInfo> selectInForwardInfoAll();
 
-    List<InForwardInfo> selectInForwardInfoListByAgrCode(String agrCode);
+    List<InForwardInfo> selectInForwardInfoListByAggrCode(String aggrCode);
 
-    List<InForwardInfo> selectInForwardInfoListByAgrId(String agrId);
+    List<InForwardInfo> selectInForwardInfoListByAggrId(String aggrId);
 }

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.integrator.mapper.InAppAccessAggrMapper">
+    
+    <resultMap type="InAppAccessAggr" id="InAppAccessAggrResult">
+        <result property="appAggrId"    column="app_aggr_id"    />
+        <result property="appId"    column="app_id"    />
+        <result property="aggrId"    column="aggr_id"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectInAppAccessAggrVo">
+        select app_aggr_id, app_id, aggr_id, status, remark, create_by, create_time, update_by, update_time from in_app_access_aggr
+    </sql>
+
+    <select id="selectInAppAccessAggrList" parameterType="InAppAccessAggr" resultMap="InAppAccessAggrResult">
+        <include refid="selectInAppAccessAggrVo"/>
+        <where>  
+            <if test="appId != null  and appId != ''"> and app_id = #{appId}</if>
+            <if test="aggrId != null  and aggrId != ''"> and aggr_id = #{aggrId}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectInAppAccessAggrById" parameterType="String" resultMap="InAppAccessAggrResult">
+        <include refid="selectInAppAccessAggrVo"/>
+        where app_aggr_id = #{appAggrId}
+    </select>
+        
+    <insert id="insertInAppAccessAggr" parameterType="InAppAccessAggr">
+        insert into in_app_access_aggr
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="appAggrId != null">app_aggr_id,</if>
+            <if test="appId != null">app_id,</if>
+            <if test="aggrId != null">aggr_id,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="appAggrId != null">#{appAggrId},</if>
+            <if test="appId != null">#{appId},</if>
+            <if test="aggrId != null">#{aggrId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInAppAccessAggr" parameterType="InAppAccessAggr">
+        update in_app_access_aggr
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="appId != null">app_id = #{appId},</if>
+            <if test="aggrId != null">aggr_id = #{aggrId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where app_aggr_id = #{appAggrId}
+    </update>
+
+    <delete id="deleteInAppAccessAggrById" parameterType="String">
+        delete from in_app_access_aggr where app_aggr_id = #{appAggrId}
+    </delete>
+
+    <delete id="deleteInAppAccessAggrByIds" parameterType="String">
+        delete from in_app_access_aggr where app_aggr_id in
+        <foreach item="appAggrId" collection="array" open="(" separator="," close=")">
+            #{appAggrId}
+        </foreach>
+    </delete>
+    
+</mapper>

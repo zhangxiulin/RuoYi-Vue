@@ -18,15 +18,15 @@ public class InAggregation extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 主键ID */
-    private String agrId;
+    private String aggrId;
 
     /** 聚合名称 */
     @Excel(name = "聚合名称")
-    private String agrName;
+    private String aggrName;
 
     /** 聚合编号 */
     @Excel(name = "聚合编号")
-    private String agrCode;
+    private String aggrCode;
 
     /** 分布式事务 */
     @Excel(name = "分布式事务")
@@ -62,32 +62,32 @@ public class InAggregation extends BaseEntity
     /**服务接口列表**/
     private List<InForwardInfo> forwardInfoList;
 
-    public void setAgrId(String agrId) 
+    public void setAggrId(String aggrId)
     {
-        this.agrId = agrId;
+        this.aggrId = aggrId;
     }
 
-    public String getAgrId() 
+    public String getAggrId()
     {
-        return agrId;
+        return aggrId;
     }
-    public void setAgrName(String agrName) 
+    public void setAggrName(String aggrName)
     {
-        this.agrName = agrName;
-    }
-
-    public String getAgrName() 
-    {
-        return agrName;
-    }
-    public void setAgrCode(String agrCode) 
-    {
-        this.agrCode = agrCode;
+        this.aggrName = aggrName;
     }
 
-    public String getAgrCode() 
+    public String getAggrName()
     {
-        return agrCode;
+        return aggrName;
+    }
+    public void setAggrCode(String aggrCode)
+    {
+        this.aggrCode = aggrCode;
+    }
+
+    public String getAggrCode()
+    {
+        return aggrCode;
     }
     public void setIsDtx(String isDtx) 
     {
@@ -171,9 +171,9 @@ public class InAggregation extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("agrId", getAgrId())
-            .append("agrName", getAgrName())
-            .append("agrCode", getAgrCode())
+            .append("aggrId", getAggrId())
+            .append("aggrName", getAggrName())
+            .append("aggrCode", getAggrCode())
             .append("isDtx", getIsDtx())
             .append("dtxSolution", getDtxSolution())
             .append("isAsync", getIsAsync())

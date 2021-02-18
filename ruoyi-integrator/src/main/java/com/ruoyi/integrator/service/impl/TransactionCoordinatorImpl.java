@@ -13,10 +13,12 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.integrator.domain.InForwardInfo;
 import com.ruoyi.integrator.domain.vo.InForwardRequestVo;
+import com.ruoyi.integrator.domain.vo.InHttpAuthInfoVo;
 import com.ruoyi.integrator.enums.InForwardProtocol;
 import com.ruoyi.integrator.enums.InForwardType;
 import com.ruoyi.integrator.service.ITransactionCoordinator;
 import com.ruoyi.integrator.service.InAggregateForwardContext;
+import com.ruoyi.integrator.thread.RestForwardSendThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -40,8 +42,10 @@ public class TransactionCoordinatorImpl implements ITransactionCoordinator {
     private static final String TCC_CONFIRM_REQ_PREFIX = "TCC-CONFIRM-REQ";
     private static final String TCC_CANCEL_REQ_PREFIX = "TCC-CANCEL-REQ";
 
+    private static final String SUCCESS_CODE_PRE = "2";
+
     @Override
-    public AjaxResult confirm(List<AjaxResult> fwdAjaxResultList)  throws Exception {
+    public AjaxResult confirm(List<AjaxResult> fwdAjaxResultList, List<InHttpAuthInfoVo> inHttpAuthInfoVoList)  throws Exception {
         AjaxResult ajaxResult = null;
         List<TccTryAjaxResult> tccTryAjaxResultList = new ArrayList<>();
         boolean intime = true;
@@ -86,9 +90,16 @@ public class TransactionCoordinatorImpl implements ITransactionCoordinator {
                 inForwardInfo.setForwardMethod(HttpMethod.PUT.name());
                 InAggregateForwardContext inForwardContext = SpringUtils.getBean(InAggregateForwardContext.class);
                 InForwardRequestVo inForwardRequestVo = new InForwardRequestVo();
-                inForwardRequestVo.setReqId(inForwardInfo.getInfoId());
+                inForwardRequestVo.setReqId(inForwardInfo.getForwardCode());
                 inForwardRequestVo.setInForwardInfo(inForwardInfo);
                 inForwardRequestVo.setData((Map) dataJsonObj);
+                // 设置认证信息
+                InHttpAuthInfoVo inHttpAuthInfoVo = inHttpAuthInfoVoList.get(i);
+                if (inHttpAuthInfoVo != null) {
+                    // 开启
+                    inHttpAuthInfoVo.setSpecifyEnabled(true);
+                    inForwardRequestVo.setInHttpAuthInfoVo(inHttpAuthInfoVo);
+                }
                 inForwardContext.submitForward(confirmCompletionService, InForwardType.REST, inForwardRequestVo);
             }
 
@@ -103,6 +114,19 @@ public class TransactionCoordinatorImpl implements ITransactionCoordinator {
                     confirmSuccess = false;
                     // 可以进行合理重试（confirm, cancel接口必须是幂等性）
                     // TODO
+                } else {
+                    String data = (String) confirmAjaxResult.get(AjaxResult.DATA_TAG);
+                    JSONObject innerJsonData = JSONObject.parseObject(data);
+                    String innerCode = innerJsonData.getString(AjaxResult.CODE_TAG);
+                    if (innerCode != null && innerCode.startsWith(SUCCESS_CODE_PRE)) {
+                        confirmSuccess = true;
+                    } else {
+                        confirmSuccess = false;
+                    }
+                }
+                // 移除httpAuthInfo
+                if (confirmAjaxResult.containsKey(RestForwardSendThread.KEY_IN_HTTP_AUTH_INFO)) {
+                    confirmAjaxResult.remove(RestForwardSendThread.KEY_IN_HTTP_AUTH_INFO);
                 }
             }
 
@@ -126,7 +150,7 @@ public class TransactionCoordinatorImpl implements ITransactionCoordinator {
     }
 
     @Override
-    public AjaxResult cancel(List<AjaxResult> fwdAjaxResultList)  throws Exception {
+    public AjaxResult cancel(List<AjaxResult> fwdAjaxResultList, List<InHttpAuthInfoVo> inHttpAuthInfoVoList)  throws Exception {
         AjaxResult ajaxResult = null;
         List<TccTryAjaxResult> tccTryAjaxResultList = new ArrayList<>();
         for (int i=0,len=fwdAjaxResultList.size(); i<len; i++) {
@@ -174,9 +198,17 @@ public class TransactionCoordinatorImpl implements ITransactionCoordinator {
                     inForwardInfo.setForwardMethod(HttpMethod.DELETE.name());
                     InAggregateForwardContext inForwardContext = SpringUtils.getBean(InAggregateForwardContext.class);
                     InForwardRequestVo inForwardRequestVo = new InForwardRequestVo();
-                    inForwardRequestVo.setReqId(inForwardInfo.getInfoId());
+                    inForwardRequestVo.setReqId(inForwardInfo.getForwardCode());
                     inForwardRequestVo.setInForwardInfo(inForwardInfo);
                     inForwardRequestVo.setData((Map) dataJsonObj);
+                    // 设置认证信息
+                    // 设置认证信息
+                    InHttpAuthInfoVo inHttpAuthInfoVo = inHttpAuthInfoVoList.get(i);
+                    if (inHttpAuthInfoVo != null) {
+                        // 开启
+                        inHttpAuthInfoVo.setSpecifyEnabled(true);
+                        inForwardRequestVo.setInHttpAuthInfoVo(inHttpAuthInfoVo);
+                    }
                     inForwardContext.submitForward(cancelCompletionService, InForwardType.REST, inForwardRequestVo);
                 }
             }

@@ -67,7 +67,7 @@ public class Dtx2pcAggregateThread implements Callable<AjaxResult> {
 
     @Override
     public AjaxResult call() throws Exception {
-        logger.info("开始处理聚合服务["+inAggregation.getAgrCode()+"] 分布式事务[2PC]...");
+        logger.info("开始处理聚合服务["+inAggregation.getAggrCode()+"] 分布式事务[2PC]...");
         AjaxResult ajaxResult = null;
         // 获取所有被聚合的服务接口
         List<InForwardInfo> forwardInfoList = inAggregation.getForwardInfoList();
@@ -79,7 +79,7 @@ public class Dtx2pcAggregateThread implements Callable<AjaxResult> {
 
             }
 
-            logger.info("聚合服务["+inAggregation.getAgrCode()+"]并行执行（2PC方案目前只支持并行）");
+            logger.info("聚合服务["+inAggregation.getAggrCode()+"]并行执行（2PC方案目前只支持并行）");
 
             // 判断是否同一个RM（datasource）
             Set<String> rmSet = new HashSet<>();
@@ -371,7 +371,7 @@ public class Dtx2pcAggregateThread implements Callable<AjaxResult> {
             boolean onePhase = false;
             if (rmSet.size() == 1){  // 如果需要增删改的数据都在同一个RM上，TM可以使用一阶段提交
                 onePhase = true;
-                logger.info("聚合服务["+inAggregation.getAgrCode()+"] 分布式事务[2PC] 需要增删改的数据都在同一个RM上，TM优化为一阶段提交");
+                logger.info("聚合服务["+inAggregation.getAggrCode()+"] 分布式事务[2PC] 需要增删改的数据都在同一个RM上，TM优化为一阶段提交");
             }
 
             // 所有事务分支都prepare成功，提交所有事务分支
@@ -394,7 +394,7 @@ public class Dtx2pcAggregateThread implements Callable<AjaxResult> {
                 ajaxResult = AjaxResult.error("内部服务出现错误，最终回滚", fwdAjaxResultList);
             }
         }
-        logger.info("聚合服务["+inAggregation.getAgrCode()+"] 分布式事务[2PC] 处理结束.");
+        logger.info("聚合服务["+inAggregation.getAggrCode()+"] 分布式事务[2PC] 处理结束.");
         return ajaxResult;
     }
 }

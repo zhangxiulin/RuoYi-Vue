@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author: zhangxiulin
  * @time: 2021/1/27 21:36
  */
-public interface IDigestService {
+public interface IOpenDigestService {
 
     int auth(HttpServletRequest httpServletRequest, HttpServletResponse httpResponse);
 

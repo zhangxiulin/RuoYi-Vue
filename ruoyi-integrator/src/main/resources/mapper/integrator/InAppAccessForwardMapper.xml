@@ -19,5 +19,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null  and status != ''"> and a.status = #{status}</if>
         </where>
     </select>
+
+    <select id="countInAppAccessForward" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(1)
+        from in_app_access_forward a , in_app_access b, in_forward_info c
+        <where>
+            a.app_id = b.app_id and a.fwd_id = c.info_id
+            and b.app_key = #{appKey}
+            and c.forward_code = #{forwardCode}
+        </where>
+    </select>
     
 </mapper>

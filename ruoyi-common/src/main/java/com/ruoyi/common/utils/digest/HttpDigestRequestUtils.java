@@ -119,7 +119,7 @@ public class HttpDigestRequestUtils {
      * @param type                                     返回xml和json格式数据，默认xml，传入json返回json数据
      * @return URL                                     所代表远程资源的响应结果
      */
-    public static String sendPUT(String url, String param, String username, String password, String json, String type) {
+    public static String sendPut(String url, String param, String username, String password, String json, String type) {
 
         StringBuilder result = new StringBuilder();
         BufferedReader in = null;
@@ -462,12 +462,12 @@ public class HttpDigestRequestUtils {
     private static String formatResultInfo(HttpURLConnection connection, String type) throws IOException {
         String result = "";
         if (type != null && type.equals("json")) {
-            result = String.format("{\"errCode\":%s, \"message\":%s}",connection.getResponseCode(),connection.getResponseMessage());
+            result = String.format("{\"code\":%s, \"msg\":%s}",connection.getResponseCode(),connection.getResponseMessage());
         } else {
             result = String.format(" <?xml version=\"1.0\" encoding=\"UTF-8\" ?> "
                     + " <wmsResponse>"
-                    + " <errCode>%d</errCode>"
-                    + " <message>%s</message>"
+                    + " <code>%d</code>"
+                    + " <msg>%s</msg>"
                     + " </wmsResponse>",connection.getResponseCode(),connection.getResponseMessage());
         }
         return result;

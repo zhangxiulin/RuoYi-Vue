@@ -16,11 +16,11 @@ public class InAggregationForward extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 主键ID */
-    private String agrFwdId;
+    private String aggrFwdId;
 
     /** 聚合ID */
     @Excel(name = "聚合ID")
-    private String agrId;
+    private String aggrId;
 
     /** 转发ID */
     @Excel(name = "转发ID")
@@ -30,23 +30,23 @@ public class InAggregationForward extends BaseEntity
     @Excel(name = "顺序")
     private Integer orderNum;
 
-    public void setAgrFwdId(String agrFwdId)
+    public void setAggrFwdId(String aggrFwdId)
     {
-        this.agrFwdId = agrFwdId;
+        this.aggrFwdId = aggrFwdId;
     }
 
-    public String getAgrFwdId()
+    public String getAggrFwdId()
     {
-        return agrFwdId;
+        return aggrFwdId;
     }
-    public void setAgrId(String agrId)
+    public void setAggrId(String aggrId)
     {
-        this.agrId = agrId;
+        this.aggrId = aggrId;
     }
 
-    public String getAgrId()
+    public String getAggrId()
     {
-        return agrId;
+        return aggrId;
     }
     public void setFwdId(String fwdId)
     {
@@ -70,8 +70,8 @@ public class InAggregationForward extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-                .append("agrFwdId", getAgrFwdId())
-                .append("agrId", getAgrId())
+                .append("aggrFwdId", getAggrFwdId())
+                .append("aggrId", getAggrId())
                 .append("fwdId", getFwdId())
                 .append("orderNum", getOrderNum())
                 .toString();

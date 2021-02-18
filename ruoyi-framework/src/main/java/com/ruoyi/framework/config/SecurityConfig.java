@@ -100,12 +100,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/login", "/captchaImage").anonymous()
 
                 // 其他方式控制
-                .antMatchers("/integrator/forward").anonymous()
+                /*.antMatchers("/integrator/forward").anonymous()
                 .antMatchers("/integrator/aggr").anonymous()
                 .antMatchers("/demo/accountWaterTcc/tryIncome").anonymous()
                 .antMatchers("/demo/accountWaterTcc/tryPay").anonymous()
                 .antMatchers("/demo/accountWaterTcc/confirm").anonymous()
-                .antMatchers("/demo/accountWaterTcc/cancel").anonymous()
+                .antMatchers("/demo/accountWaterTcc/cancel").anonymous()*/
 
                 .antMatchers("/open/**").anonymous()
 

@@ -15,6 +15,7 @@ import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.integrator.domain.InAggregation;
 import com.ruoyi.integrator.domain.InForwardInfo;
 import com.ruoyi.integrator.domain.vo.InForwardRequestVo;
+import com.ruoyi.integrator.domain.vo.InHttpAuthInfoVo;
 import com.ruoyi.integrator.enums.InForwardProtocol;
 import com.ruoyi.integrator.enums.InForwardType;
 import com.ruoyi.integrator.service.ITransactionCoordinator;
@@ -43,22 +44,27 @@ public class DtxTccAggregateThread implements Callable<AjaxResult> {
 
     private List sendDataList;
 
-    public DtxTccAggregateThread(InAggregation inAggregation, List sendVarList, List sendDataList){
+    private InHttpAuthInfoVo inHttpAuthInfoVo;
+
+    private List<InHttpAuthInfoVo> rtInHttpAuthInfoVoList = new ArrayList<>();
+
+    public DtxTccAggregateThread(InAggregation inAggregation, List sendVarList, List sendDataList, InHttpAuthInfoVo inHttpAuthInfoVo){
         this.inAggregation = inAggregation;
         this.sendVarList = sendVarList;
         this.sendDataList = sendDataList;
+        this.inHttpAuthInfoVo = inHttpAuthInfoVo;
     }
 
     @Override
     public AjaxResult call() throws Exception {
-        logger.info("开始处理聚合服务["+inAggregation.getAgrCode()+"] 分布式事务[TCC]...");
+        logger.info("开始处理聚合服务["+inAggregation.getAggrCode()+"] 分布式事务[TCC]...");
         AjaxResult ajaxResult = null;
         // 获取所有被聚合的服务接口
         List<InForwardInfo> forwardInfoList = inAggregation.getForwardInfoList();
         List<AjaxResult> fwdAjaxResultList = new ArrayList<>();
         if (forwardInfoList != null && forwardInfoList.size() > 0) {
             if (ExecutionOrder.SEQUENCE.getCode().equals(inAggregation.getExecutionOrder())) { // 顺序执行
-                logger.info("聚合服务["+inAggregation.getAgrCode()+"]顺序执行");
+                logger.info("聚合服务["+inAggregation.getAggrCode()+"]顺序执行");
                 for (int i=0,len=forwardInfoList.size(); i<len; i++){
                     InForwardInfo inForwardInfo = forwardInfoList.get(i);
                     Map<String, Object> sendVar = new HashMap<>();
@@ -70,6 +76,7 @@ public class DtxTccAggregateThread implements Callable<AjaxResult> {
                     inForwardRequestVo.setReqId(inForwardInfo.getForwardCode());
                     inForwardRequestVo.setInForwardInfo(inForwardInfo);
                     inForwardRequestVo.setVar(sendVar);
+                    inForwardRequestVo.setInHttpAuthInfoVo(inHttpAuthInfoVo);
                     if (sendData instanceof List){
                         inForwardRequestVo.setDataList((List)sendData);
                     } else {
@@ -87,12 +94,12 @@ public class DtxTccAggregateThread implements Callable<AjaxResult> {
 
             }
             // 判断总结果，全部try成功，进行确认操作；否则进行取消操作
-            boolean rtAgr = true;
+            boolean rtAggr = true;
             for (int i=0,len=fwdAjaxResultList.size(); i<len; i++){
                 AjaxResult fwdAjaxResult = fwdAjaxResultList.get(i);
                 int code = (int) fwdAjaxResult.get(AjaxResult.CODE_TAG);
                 if (HttpStatus.SUCCESS != code){
-                    rtAgr = false;
+                    rtAggr = false;
                     break;
                 }
                 // 判断内层结果
@@ -104,7 +111,7 @@ public class DtxTccAggregateThread implements Callable<AjaxResult> {
                             if (sourceDataJsonObj.containsKey(AjaxResult.CODE_TAG)) {
                                 // 判断返回码是否是2XX
                                 if (!sourceDataJsonObj.getString(AjaxResult.CODE_TAG).startsWith(SUCCESS_CODE_PRE)) {
-                                    rtAgr = false;
+                                    rtAggr = false;
                                     break;
                                 }
                             }
@@ -113,13 +120,20 @@ public class DtxTccAggregateThread implements Callable<AjaxResult> {
                         }
                     }
                 }
+
+                rtInHttpAuthInfoVoList.add((InHttpAuthInfoVo) fwdAjaxResult.get(RestForwardSendThread.KEY_IN_HTTP_AUTH_INFO));
+                // 移除httpAuthInfo
+                if (fwdAjaxResult.containsKey(RestForwardSendThread.KEY_IN_HTTP_AUTH_INFO)) {
+                    fwdAjaxResult.remove(RestForwardSendThread.KEY_IN_HTTP_AUTH_INFO);
+                }
             }
             // 确认
-            if (rtAgr) {
+            if (rtAggr) {
                 String msg = "尝试阶段参与者全部成功，进行确认...";
                 logger.info(msg, fwdAjaxResultList);
                 ITransactionCoordinator transactionCoordinator = SpringUtils.getBean(ITransactionCoordinator.class);
-                AjaxResult confirmedAjaxResult = transactionCoordinator.confirm(fwdAjaxResultList);
+                // 根据当前认证方案决定接下来的认证方案
+                AjaxResult confirmedAjaxResult = transactionCoordinator.confirm(fwdAjaxResultList, rtInHttpAuthInfoVoList);
                 Map<String, Object> tccStageRt = new HashMap<>();
                 tccStageRt.put(TccStage.TRIED.name().toLowerCase(), fwdAjaxResultList);
                 tccStageRt.put(TccStage.CONFIRMED.name().toLowerCase(), confirmedAjaxResult);
@@ -134,7 +148,7 @@ public class DtxTccAggregateThread implements Callable<AjaxResult> {
                         }
                         break;
                         case HttpStatus.CONFLICT: {
-                            ajaxResult = AjaxResult.error("部分参与者确认了，部分没有，需要人工干预", tccStageRt);
+                            ajaxResult = AjaxResult.error("需要人工干预", tccStageRt);
                         }
                         break;
                         default:
@@ -145,7 +159,9 @@ public class DtxTccAggregateThread implements Callable<AjaxResult> {
                 String msg = "尝试阶段失败，进行取消";
                 logger.error(msg, fwdAjaxResultList);
                 ITransactionCoordinator transactionCoordinator = SpringUtils.getBean(ITransactionCoordinator.class);
-                AjaxResult canceledAjaxResult = transactionCoordinator.cancel(fwdAjaxResultList);
+                // 根据当前认证方案决定接下来的认证方案
+                inHttpAuthInfoVo.setSpecifyEnabled(true);
+                AjaxResult canceledAjaxResult = transactionCoordinator.cancel(fwdAjaxResultList, rtInHttpAuthInfoVoList);
                 Map<String, Object> tccStageRt = new HashMap<>();
                 tccStageRt.put(TccStage.TRIED.name().toLowerCase(), fwdAjaxResultList);
                 tccStageRt.put(TccStage.CANCELED.name().toLowerCase(), canceledAjaxResult);
@@ -163,7 +179,7 @@ public class DtxTccAggregateThread implements Callable<AjaxResult> {
                 }
             }
         }
-        logger.info("聚合服务["+inAggregation.getAgrCode()+"] 分布式事务[TCC] 处理结束.");
+        logger.info("聚合服务["+inAggregation.getAggrCode()+"] 分布式事务[TCC] 处理结束.");
         return ajaxResult;
     }
 }

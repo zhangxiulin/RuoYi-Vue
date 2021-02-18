@@ -6,7 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectInAggregationByCode" parameterType="String" resultMap="InAggregationResult">
         <include refid="selectInAggregationVo"/>
-        where agr_code = #{agrCode}
+        where aggr_code = #{aggrCode}
     </select>
     
 </mapper>

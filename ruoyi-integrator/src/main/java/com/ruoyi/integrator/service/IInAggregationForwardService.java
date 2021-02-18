@@ -14,10 +14,10 @@ public interface IInAggregationForwardService
     /**
      * 查询服务聚合关联
      * 
-     * @param agrFwdId 服务聚合关联ID
+     * @param aggrFwdId 服务聚合关联ID
      * @return 服务聚合关联
      */
-    public InAggregationForward selectInAggregationForwardById(String agrFwdId);
+    public InAggregationForward selectInAggregationForwardById(String aggrFwdId);
 
     /**
      * 查询服务聚合关联列表
@@ -46,18 +46,18 @@ public interface IInAggregationForwardService
     /**
      * 批量删除服务聚合关联
      * 
-     * @param agrFwdIds 需要删除的服务聚合关联ID
+     * @param aggrFwdIds 需要删除的服务聚合关联ID
      * @return 结果
      */
-    public int deleteInAggregationForwardByIds(String[] agrFwdIds);
+    public int deleteInAggregationForwardByIds(String[] aggrFwdIds);
 
     /**
      * 删除服务聚合关联信息
      * 
-     * @param agrFwdId 服务聚合关联ID
+     * @param aggrFwdId 服务聚合关联ID
      * @return 结果
      */
-    public int deleteInAggregationForwardById(String agrFwdId);
+    public int deleteInAggregationForwardById(String aggrFwdId);
 
-    List<String> selectInForwardIdListByArgId(String agrId);
+    List<String> selectInForwardIdListByArgId(String aggrId);
 }

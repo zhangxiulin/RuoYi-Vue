@@ -3,9 +3,12 @@ package com.ruoyi.integrator.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.exception.CustomException;
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.integrator.domain.InForwardInfo;
 import com.ruoyi.integrator.domain.vo.InForwardRequestVo;
+import com.ruoyi.integrator.domain.vo.InHttpAuthInfoVo;
 import com.ruoyi.integrator.enums.InForwardType;
 import com.ruoyi.integrator.service.IInForwardInfoService;
 import com.ruoyi.integrator.service.IInForwardService;
@@ -45,6 +48,9 @@ public class InForwardServiceImpl implements IInForwardService {
 
     @Autowired
     private Validator validator;
+
+    @Autowired
+    private TokenService tokenService;
 
     @Override
     public AjaxResult forward(JSONObject jsonObject) {
@@ -87,6 +93,12 @@ public class InForwardServiceImpl implements IInForwardService {
                 return ajaxResult;
             }
         }
+
+        // 获取当前token，并设置到转发参数中
+        String token = tokenService.getToken(ServletUtils.getRequest());
+        InHttpAuthInfoVo inHttpAuthInfoVo = new InHttpAuthInfoVo();
+        inHttpAuthInfoVo.setSpecifyToken(token);
+        inForwardRequestVo.setInHttpAuthInfoVo(inHttpAuthInfoVo);
 
         // 根据转发编号获取转发配置信息
         InForwardInfo inForwardInfo = inForwardInfoService.selectInForwardInfoByCode(inForwardRequestVo.getReqId());

@@ -72,15 +72,15 @@ public class InAggregationController extends BaseController
      * 获取服务聚合详细信息
      */
     @PreAuthorize("@ss.hasPermi('integrator:aggregation:query')")
-    @GetMapping(value = { "/", "/{agrId}" })
-    public AjaxResult getInfo(@PathVariable(value = "agrId", required = false) String agrId)
+    @GetMapping(value = { "/", "/{aggrId}" })
+    public AjaxResult getInfo(@PathVariable(value = "aggrId", required = false) String aggrId)
     {
         AjaxResult ajax = AjaxResult.success();
         ajax.put("forwardInfos", inForwardInfoService.selectInForwardInfoAll());
-        if (StringUtils.isNotNull(agrId))
+        if (StringUtils.isNotNull(aggrId))
         {
-            ajax.put(AjaxResult.DATA_TAG, inAggregationService.selectInAggregationById(agrId));
-            ajax.put("forwardIds", inAggregationForwardService.selectInForwardIdListByArgId(agrId));
+            ajax.put(AjaxResult.DATA_TAG, inAggregationService.selectInAggregationById(aggrId));
+            ajax.put("forwardIds", inAggregationForwardService.selectInForwardIdListByArgId(aggrId));
         }
         return ajax;
     }
@@ -112,9 +112,9 @@ public class InAggregationController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('integrator:aggregation:remove')")
     @Log(title = "服务聚合", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{agrIds}")
-    public AjaxResult remove(@PathVariable String[] agrIds)
+	@DeleteMapping("/{aggrIds}")
+    public AjaxResult remove(@PathVariable String[] aggrIds)
     {
-        return toAjax(inAggregationService.deleteInAggregationByIds(agrIds));
+        return toAjax(inAggregationService.deleteInAggregationByIds(aggrIds));
     }
 }

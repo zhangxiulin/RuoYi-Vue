@@ -11,9 +11,9 @@ export function listAggregation(query) {
 }
 
 // 查询服务聚合详细
-export function getAggregation(agrId) {
+export function getAggregation(aggrId) {
   return request({
-    url: '/integrator/aggregation/' + praseStrEmpty(agrId),
+    url: '/integrator/aggregation/' + praseStrEmpty(aggrId),
     method: 'get'
   })
 }
@@ -37,9 +37,9 @@ export function updateAggregation(data) {
 }
 
 // 删除服务聚合
-export function delAggregation(agrId) {
+export function delAggregation(aggrId) {
   return request({
-    url: '/integrator/aggregation/' + agrId,
+    url: '/integrator/aggregation/' + aggrId,
     method: 'delete'
   })
 }

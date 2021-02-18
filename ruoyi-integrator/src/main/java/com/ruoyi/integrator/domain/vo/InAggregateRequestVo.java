@@ -22,6 +22,8 @@ public class InAggregateRequestVo {
 
     /**过程数据**/
     private InAggregation inAggregation;
+
+    private InHttpAuthInfoVo inHttpAuthInfoVo;
     /**过程数据**/
 
     @NotBlank(message = "聚合服务编号不能为空")
@@ -58,5 +60,11 @@ public class InAggregateRequestVo {
         this.inAggregation = inAggregation;
     }
 
+    public InHttpAuthInfoVo getInHttpAuthInfoVo() {
+        return inHttpAuthInfoVo;
+    }
 
+    public void setInHttpAuthInfoVo(InHttpAuthInfoVo inHttpAuthInfoVo) {
+        this.inHttpAuthInfoVo = inHttpAuthInfoVo;
+    }
 }

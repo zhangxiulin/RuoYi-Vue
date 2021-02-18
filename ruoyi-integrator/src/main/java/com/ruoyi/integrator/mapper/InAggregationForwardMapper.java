@@ -11,9 +11,9 @@ import com.ruoyi.integrator.domain.InAggregationForward;
  */
 public interface InAggregationForwardMapper extends InAggregationForwardMapperAuto
 {
-    List<String> selectInForwardIdListByAgrId(String agrId);
+    List<String> selectInForwardIdListByAggrId(String aggrId);
 
     int batchInAggregationForward(List<InAggregationForward> argFwdList);
 
-    int deleteInAggregationForwardByAgrId(String agrId);
+    int deleteInAggregationForwardByAggrId(String aggrId);
 }

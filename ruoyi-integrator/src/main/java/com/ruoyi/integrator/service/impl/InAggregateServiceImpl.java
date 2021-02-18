@@ -8,6 +8,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.integrator.domain.InAggregation;
 import com.ruoyi.integrator.domain.InForwardInfo;
 import com.ruoyi.integrator.domain.vo.InAggregateRequestVo;
+import com.ruoyi.integrator.domain.vo.InHttpAuthInfoVo;
 import com.ruoyi.integrator.enums.DistributedTxSolution;
 import com.ruoyi.integrator.mapper.InAggregationMapper;
 import com.ruoyi.integrator.mapper.InForwardInfoMapper;
@@ -58,10 +59,14 @@ public class InAggregateServiceImpl implements IInAggregateService {
     private InForwardInfoMapper inForwardInfoMapper;
 
     @Override
-    public AjaxResult aggregate(JSONObject jsonObject) {
+    public AjaxResult aggregate(JSONObject jsonObject, InHttpAuthInfoVo inHttpAuthInfoVo) {
         AjaxResult ajaxResult = null;
         // 解析报文
         InAggregateRequestVo inAggregateRequestVo = new InAggregateRequestVo();
+
+        // 设置当前认证信息
+        inAggregateRequestVo.setInHttpAuthInfoVo(inHttpAuthInfoVo);
+
         if (jsonObject != null) {
             String reqId = jsonObject.getString(KEY_REQ_ID);
             inAggregateRequestVo.setReqId(reqId);
@@ -124,7 +129,7 @@ public class InAggregateServiceImpl implements IInAggregateService {
         if (inAggregation != null){
             request.setInAggregation(inAggregation);
             // 该聚合服务聚合的服务接口列表
-            List<InForwardInfo> inForwardInfoList = inForwardInfoMapper.selectInForwardInfoListByAgrId(inAggregation.getAgrId());
+            List<InForwardInfo> inForwardInfoList = inForwardInfoMapper.selectInForwardInfoListByAggrId(inAggregation.getAggrId());
 
             // 校验报文合法性
             if (inForwardInfoList != null) {

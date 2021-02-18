@@ -123,7 +123,13 @@
             type="text"
             icon="el-icon-setting"
             @click="handleForwardData(scope.row)"
-          >消费权限配置</el-button>
+          >转发服务权限</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-setting"
+            @click="handleAggrData(scope.row)"
+          >聚合服务权限</el-button>
           <el-button
             size="mini"
             type="text"
@@ -202,7 +208,13 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="参与方向">
+            <el-form-item prop="servicePartitionDirection" >
+              <span slot="label">
+                <span>参与方向</span>
+                <el-tooltip class="item" effect="dark" content="#接入应用#通过【接入标识+接入密码】调用本平台治理的服务，该#接入应用#为服务消费者（入流量）；本平台使用【认证名+认证密码】调用#接入应用#的服务，该#接入应用#为服务提供者（出流量）" placement="top-start">
+                  <i class="el-icon-question" style="color:darkblue;"></i>
+                </el-tooltip>
+              </span>
               <el-checkbox-group v-model="form.servicePartitionDirection">
                 <el-checkbox
                   v-for="dict in servicePartitionDirectionOptions"
@@ -219,7 +231,7 @@
             <el-form-item  prop="certificationUsername">
               <span slot="label">
                 <span>认证用户名</span>
-                <el-tooltip class="item" effect="dark" content="出流量时，外部应用作为服务提供方的请求头认证用户名，和认证密码搭配使用" placement="top-start">
+                <el-tooltip class="item" effect="dark" content="出流量时，#接入应用#作为服务提供方的请求头认证用户名，和认证密码搭配使用" placement="top-start">
                   <i class="el-icon-question" style="color:darkblue;"></i>
                 </el-tooltip>
               </span>
@@ -403,7 +415,11 @@ export default {
     },
     /** 转发权限配置 **/
     handleForwardData(row) {
-      this.$router.push('/appAccess/forward/data/' + row.appId);
+      this.$router.push('/appAccessFwd/forward/data/' + row.appId);
+    },
+    /** 转发权限配置 **/
+    handleAggrData(row) {
+      this.$router.push('/appAccessAggr/aggr/data/' + row.appId);
     },
     /** 提交按钮 */
     submitForm() {

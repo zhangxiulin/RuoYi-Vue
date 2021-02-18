@@ -91,6 +91,12 @@
             <artifactId>ruoyi-open</artifactId>
         </dependency>
 
+        <!-- 开放项目 -->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-demo-open</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

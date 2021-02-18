@@ -14,15 +14,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where status = '0'
     </select>
 
-    <select id="selectInForwardInfoListByAgrCode" parameterType="String" resultMap="InForwardInfoResult">
+    <select id="selectInForwardInfoListByAggrCode" parameterType="String" resultMap="InForwardInfoResult">
         SELECT a.* from in_forward_info a, in_aggregation_forward b, in_aggregation c
-        WHERE a.info_id = b.fwd_id and b.agr_id = c.agr_id and c.agr_code = #{agrCode}
+        WHERE a.info_id = b.fwd_id and b.aggr_id = c.aggr_id and c.aggr_code = #{aggrCode}
         ORDER BY b.order_num
     </select>
 
-    <select id="selectInForwardInfoListByAgrId" parameterType="String" resultMap="InForwardInfoResult">
+    <select id="selectInForwardInfoListByAggrId" parameterType="String" resultMap="InForwardInfoResult">
         SELECT a.* from in_forward_info a, in_aggregation_forward b
-        WHERE a.info_id = b.fwd_id and b.agr_id = #{agrId}
+        WHERE a.info_id = b.fwd_id and b.aggr_id = #{aggrId}
         ORDER BY b.order_num
     </select>
 

@@ -38,7 +38,7 @@ public class InRestForwardStrategyImpl implements IInForwardStrategy {
         logger.info("本次请求[" + request.getReqId() + "]为HTTP转发请求");
         AjaxResult ajaxResult = null;
         InForwardInfo inForwardInfo = request.getInForwardInfo();
-        RestForwardSendThread rfst = new RestForwardSendThread(inForwardInfo, request.getVar(), request.getData());
+        RestForwardSendThread rfst = new RestForwardSendThread(inForwardInfo, request.getVar(), request.getData(), request.getInHttpAuthInfoVo());
         if (Constants.YES.equals(inForwardInfo.getIsAsync())){ // 异步
             threadPoolTaskExecutor.submit(rfst);
             ajaxResult = AjaxResult.success("转发提交成功");

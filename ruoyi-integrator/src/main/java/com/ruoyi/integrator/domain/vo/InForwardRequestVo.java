@@ -1,5 +1,6 @@
 package com.ruoyi.integrator.domain.vo;
 
+import com.ruoyi.common.enums.HttpAuthenticationType;
 import com.ruoyi.integrator.domain.InForwardInfo;
 
 import javax.validation.constraints.NotBlank;
@@ -26,6 +27,9 @@ public class InForwardRequestVo {
     private InForwardInfo inForwardInfo;
 
     private Map<String, Object> relateData;
+
+    private InHttpAuthInfoVo inHttpAuthInfoVo;
+
     /**过程数据**/
 
     @NotBlank(message = "转发编号不能为空")
@@ -76,5 +80,13 @@ public class InForwardRequestVo {
 
     public void setRelateData(Map<String, Object> relateData) {
         this.relateData = relateData;
+    }
+
+    public InHttpAuthInfoVo getInHttpAuthInfoVo() {
+        return inHttpAuthInfoVo;
+    }
+
+    public void setInHttpAuthInfoVo(InHttpAuthInfoVo inHttpAuthInfoVo) {
+        this.inHttpAuthInfoVo = inHttpAuthInfoVo;
     }
 }

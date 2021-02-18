@@ -42,14 +42,14 @@ public class NoneDtxAggregateThread  implements Callable<AjaxResult> {
 
     @Override
     public AjaxResult call() throws Exception {
-        logger.info("开始处理聚合服务["+inAggregation.getAgrCode()+"] 分布式事务[无]...");
+        logger.info("开始处理聚合服务["+inAggregation.getAggrCode()+"] 分布式事务[无]...");
         AjaxResult ajaxResult = null;
         // 获取所有被聚合的服务接口
         List<InForwardInfo> forwardInfoList = inAggregation.getForwardInfoList();
         List<AjaxResult> fwdAjaxResultList = new ArrayList<>();
         if (forwardInfoList != null && forwardInfoList.size() > 0){
             if (ExecutionOrder.SEQUENCE.getCode().equals(inAggregation.getExecutionOrder())){ // 顺序执行
-                logger.info("聚合服务["+inAggregation.getAgrCode()+"]顺序执行");
+                logger.info("聚合服务["+inAggregation.getAggrCode()+"]顺序执行");
                 for (int i=0,len=forwardInfoList.size(); i<len; i++){
                     InForwardInfo inForwardInfo = forwardInfoList.get(i);
                     Object sendVar = sendVarList.get(i);
@@ -71,21 +71,21 @@ public class NoneDtxAggregateThread  implements Callable<AjaxResult> {
                     }
                 }
                 // 判断总结果
-                boolean rtAgr = true;
+                boolean rtAggr = true;
                 for (int i=0,len=fwdAjaxResultList.size(); i<len; i++){
                     AjaxResult fwdAjaxResult = fwdAjaxResultList.get(i);
                     int code = (int) fwdAjaxResult.get(AjaxResult.CODE_TAG);
                     if (HttpStatus.SUCCESS != code){
-                        rtAgr = false;
+                        rtAggr = false;
                     }
                 }
-                if (rtAgr){
+                if (rtAggr){
                     ajaxResult = AjaxResult.success(fwdAjaxResultList);
                 } else {
                     ajaxResult = AjaxResult.error("内部服务出现错误", fwdAjaxResultList);
                 }
             } else {    // 并行执行
-                logger.info("聚合服务["+inAggregation.getAgrCode()+"]并行执行");
+                logger.info("聚合服务["+inAggregation.getAggrCode()+"]并行执行");
                 int forwardSize = forwardInfoList.size();
                 ExecutorService executorService = new ThreadPoolExecutor(forwardSize, forwardSize, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingDeque<>());
                 CompletionService completionService = new ExecutorCompletionService(executorService);
@@ -112,16 +112,16 @@ public class NoneDtxAggregateThread  implements Callable<AjaxResult> {
                     }
                 }
                 // 汇总结果
-                boolean rtAgr = true;
+                boolean rtAggr = true;
                 for (int i=0; i<forwardSize; i++){
                     AjaxResult fwdAjaxResult = (AjaxResult) completionService.take().get();
                     int code = (int) fwdAjaxResult.get(AjaxResult.CODE_TAG);
                     if (HttpStatus.SUCCESS != code){
-                        rtAgr = false;
+                        rtAggr = false;
                     }
                     fwdAjaxResultList.add(fwdAjaxResult);
                 }
-                if (rtAgr){
+                if (rtAggr){
                     ajaxResult = AjaxResult.success(fwdAjaxResultList);
                 } else {
                     ajaxResult = AjaxResult.error("内部服务出现错误", fwdAjaxResultList);
@@ -129,7 +129,7 @@ public class NoneDtxAggregateThread  implements Callable<AjaxResult> {
             }
 
         }
-        logger.info("聚合服务["+inAggregation.getAgrCode()+"] 分布式事务[无] 处理结束.");
+        logger.info("聚合服务["+inAggregation.getAggrCode()+"] 分布式事务[无] 处理结束.");
         return ajaxResult;
     }
 }

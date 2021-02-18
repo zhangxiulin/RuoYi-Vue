@@ -53,7 +53,7 @@ public class DtxAtomikosAggregateThread implements Callable<AjaxResult> {
 
     @Override
     public AjaxResult call() throws Exception {
-        logger.info("开始处理聚合服务["+inAggregation.getAgrCode()+"] 分布式事务[Atomikos]...");
+        logger.info("开始处理聚合服务["+inAggregation.getAggrCode()+"] 分布式事务[Atomikos]...");
         AjaxResult ajaxResult = null;
         // 获取所有被聚合的服务接口
         List<InForwardInfo> forwardInfoList = inAggregation.getForwardInfoList();
@@ -64,7 +64,7 @@ public class DtxAtomikosAggregateThread implements Callable<AjaxResult> {
             } else {    // 并行执行
 
             }
-            logger.info("聚合服务[" + inAggregation.getAgrCode() + "]并行执行（Atomikos方案目前只支持并行）");
+            logger.info("聚合服务[" + inAggregation.getAggrCode() + "]并行执行（Atomikos方案目前只支持并行）");
 
             UserTransaction userTransaction = new UserTransactionImp();
             List<Connection> connList = new ArrayList<>();
@@ -225,7 +225,7 @@ public class DtxAtomikosAggregateThread implements Callable<AjaxResult> {
                 }
 
                 userTransaction.commit();
-                logger.info("聚合服务["+inAggregation.getAgrCode()+"] 分布式事务[Atomikos] 提交成功");
+                logger.info("聚合服务["+inAggregation.getAggrCode()+"] 分布式事务[Atomikos] 提交成功");
                 ajaxResult = AjaxResult.success(fwdAjaxResultList);
             }catch(Exception e){
                 ajaxResult = AjaxResult.error("内部服务出现错误，最终回滚", fwdAjaxResultList);
@@ -251,7 +251,7 @@ public class DtxAtomikosAggregateThread implements Callable<AjaxResult> {
             }
 
         }
-        logger.info("聚合服务["+inAggregation.getAgrCode()+"] 分布式事务[Atomikos] 处理结束.");
+        logger.info("聚合服务["+inAggregation.getAggrCode()+"] 分布式事务[Atomikos] 处理结束.");
         return ajaxResult;
     }
 }

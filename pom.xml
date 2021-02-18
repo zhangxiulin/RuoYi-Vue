@@ -225,10 +225,17 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
-            <!-- 案例项目-->
+            <!-- 开放项目-->
             <dependency>
                 <groupId>com.ruoyi</groupId>
                 <artifactId>ruoyi-open</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+
+            <!-- 案例项目-->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>ruoyi-demo-open</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
 
@@ -259,6 +266,7 @@
         <module>ruoyi-transaction</module>
         <module>ruoyi-demo</module>
         <module>ruoyi-open</module>
+        <module>ruoyi-demo-open</module>
     </modules>
     <packaging>pom</packaging>
 

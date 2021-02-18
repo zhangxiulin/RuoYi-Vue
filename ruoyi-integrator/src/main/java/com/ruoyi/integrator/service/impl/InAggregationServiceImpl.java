@@ -32,13 +32,13 @@ public class InAggregationServiceImpl implements IInAggregationService
     /**
      * 查询服务聚合
      * 
-     * @param agrId 服务聚合ID
+     * @param aggrId 服务聚合ID
      * @return 服务聚合
      */
     @Override
-    public InAggregation selectInAggregationById(String agrId)
+    public InAggregation selectInAggregationById(String aggrId)
     {
-        return inAggregationMapper.selectInAggregationById(agrId);
+        return inAggregationMapper.selectInAggregationById(aggrId);
     }
 
     /**
@@ -62,7 +62,7 @@ public class InAggregationServiceImpl implements IInAggregationService
     @Override
     public int insertInAggregation(InAggregation inAggregation)
     {
-        inAggregation.setAgrId(IdUtils.fastSimpleUUID());
+        inAggregation.setAggrId(IdUtils.fastSimpleUUID());
         inAggregation.setCreateBy(SecurityUtils.getUsername());
         inAggregation.setCreateTime(DateUtils.getNowDate());
         int rows = inAggregationMapper.insertInAggregation(inAggregation);
@@ -84,7 +84,7 @@ public class InAggregationServiceImpl implements IInAggregationService
         inAggregation.setUpdateTime(DateUtils.getNowDate());
         int row = inAggregationMapper.updateInAggregation(inAggregation);
         // 删除旧的服务接口关联关系
-        inAggregationForwardMapper.deleteInAggregationForwardByAgrId(inAggregation.getAgrId());
+        inAggregationForwardMapper.deleteInAggregationForwardByAggrId(inAggregation.getAggrId());
         // 插入新的服务接口关联关系
         insertInAggregationForward(inAggregation);
         return row;
@@ -93,30 +93,30 @@ public class InAggregationServiceImpl implements IInAggregationService
     /**
      * 批量删除服务聚合
      * 
-     * @param agrIds 需要删除的服务聚合ID
+     * @param aggrIds 需要删除的服务聚合ID
      * @return 结果
      */
     @Override
-    public int deleteInAggregationByIds(String[] agrIds)
+    public int deleteInAggregationByIds(String[] aggrIds)
     {
-        return inAggregationMapper.deleteInAggregationByIds(agrIds);
+        return inAggregationMapper.deleteInAggregationByIds(aggrIds);
     }
 
     /**
      * 删除服务聚合信息
      * 
-     * @param agrId 服务聚合ID
+     * @param aggrId 服务聚合ID
      * @return 结果
      */
     @Override
-    public int deleteInAggregationById(String agrId)
+    public int deleteInAggregationById(String aggrId)
     {
-        return inAggregationMapper.deleteInAggregationById(agrId);
+        return inAggregationMapper.deleteInAggregationById(aggrId);
     }
 
     @Override
-    public InAggregation selectInAggregationByCode(String agrCode) {
-        return inAggregationMapper.selectInAggregationByCode(agrCode);
+    public InAggregation selectInAggregationByCode(String aggrCode) {
+        return inAggregationMapper.selectInAggregationByCode(aggrCode);
     }
 
     public void insertInAggregationForward(InAggregation inAggregation) {
@@ -125,9 +125,9 @@ public class InAggregationServiceImpl implements IInAggregationService
             List<InAggregationForward> inAggregationForwardList = new ArrayList<>();
             for (int i=0,len=forwardIds.length; i<len; i++){
                 InAggregationForward inAggregationForward = new InAggregationForward();
-                inAggregationForward.setAgrFwdId(IdUtils.fastSimpleUUID());
+                inAggregationForward.setAggrFwdId(IdUtils.fastSimpleUUID());
                 inAggregationForward.setFwdId(forwardIds[i]);
-                inAggregationForward.setAgrId(inAggregation.getAgrId());
+                inAggregationForward.setAggrId(inAggregation.getAggrId());
                 inAggregationForward.setOrderNum(i);
                 inAggregationForwardList.add(inAggregationForward);
             }

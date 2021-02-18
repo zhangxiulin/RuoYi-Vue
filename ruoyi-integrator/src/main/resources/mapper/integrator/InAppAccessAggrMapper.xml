@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.integrator.mapper.InAppAccessAggrMapper">
+
+    <resultMap type="InAppAccessAggrVo" id="InAppAccessAggrVoResult" extends="InAppAccessAggrResult">
+        <result property="appKey"    column="app_key"    />
+        <result property="aggrCode"    column="aggr_code"    />
+    </resultMap>
+
+    <select id="selectInAppAccessAggrVoList" parameterType="InAppAccessAggr" resultMap="InAppAccessAggrVoResult">
+        select a.*, b.app_key, c.aggr_code
+        from in_app_access_aggr a , in_app_access b, in_aggregation c
+        <where>
+            a.app_id = b.app_id and a.aggr_id = c.aggr_id
+            <if test="appId != null  and appId != ''"> and a.app_id = #{appId}</if>
+            <if test="aggrId != null  and aggrId != ''"> and a.aggr_id = #{aggrId}</if>
+            <if test="status != null  and status != ''"> and a.status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="countInAppAccessAggr" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(1)
+        from in_app_access_aggr a , in_app_access b, in_aggregation c
+        <where>
+            a.app_id = b.app_id and a.aggr_id = c.aggr_id
+            and b.app_key = #{appKey}
+            and c.aggr_code = #{aggrCode}
+        </where>
+    </select>
+    
+</mapper>

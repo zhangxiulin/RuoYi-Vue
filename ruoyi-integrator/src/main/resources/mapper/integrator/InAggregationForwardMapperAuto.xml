@@ -5,20 +5,20 @@
 <mapper namespace="com.ruoyi.integrator.mapper.InAggregationForwardMapper">
 
     <resultMap type="InAggregationForward" id="InAggregationForwardResult">
-        <result property="agrFwdId"    column="agr_fwd_id"    />
-        <result property="agrId"    column="agr_id"    />
+        <result property="aggrFwdId"    column="aggr_fwd_id"    />
+        <result property="aggrId"    column="aggr_id"    />
         <result property="fwdId"    column="fwd_id"    />
         <result property="orderNum"    column="order_num"    />
     </resultMap>
 
     <sql id="selectInAggregationForwardVo">
-        select agr_fwd_id, agr_id, fwd_id, order_num from in_aggregation_forward
+        select aggr_fwd_id, aggr_id, fwd_id, order_num from in_aggregation_forward
     </sql>
 
     <select id="selectInAggregationForwardList" parameterType="InAggregationForward" resultMap="InAggregationForwardResult">
         <include refid="selectInAggregationForwardVo"/>
         <where>
-            <if test="agrId != null  and agrId != ''"> and agr_id = #{agrId}</if>
+            <if test="aggrId != null  and aggrId != ''"> and aggr_id = #{aggrId}</if>
             <if test="fwdId != null  and fwdId != ''"> and fwd_id = #{fwdId}</if>
             <if test="orderNum != null "> and order_num = #{orderNum}</if>
         </where>
@@ -26,20 +26,20 @@
 
     <select id="selectInAggregationForwardById" parameterType="String" resultMap="InAggregationForwardResult">
         <include refid="selectInAggregationForwardVo"/>
-        where agr_fwd_id = #{agrFwdId}
+        where aggr_fwd_id = #{aggrFwdId}
     </select>
 
     <insert id="insertInAggregationForward" parameterType="InAggregationForward">
         insert into in_aggregation_forward
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="agrFwdId != null">agr_fwd_id,</if>
-            <if test="agrId != null and agrId != ''">agr_id,</if>
+            <if test="aggrFwdId != null">aggr_fwd_id,</if>
+            <if test="aggrId != null and aggrId != ''">aggr_id,</if>
             <if test="fwdId != null and fwdId != ''">fwd_id,</if>
             <if test="orderNum != null">order_num,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="agrFwdId != null">#{agrFwdId},</if>
-            <if test="agrId != null and agrId != ''">#{agrId},</if>
+            <if test="aggrFwdId != null">#{aggrFwdId},</if>
+            <if test="aggrId != null and aggrId != ''">#{aggrId},</if>
             <if test="fwdId != null and fwdId != ''">#{fwdId},</if>
             <if test="orderNum != null">#{orderNum},</if>
         </trim>
@@ -48,21 +48,21 @@
     <update id="updateInAggregationForward" parameterType="InAggregationForward">
         update in_aggregation_forward
         <trim prefix="SET" suffixOverrides=",">
-            <if test="agrId != null and agrId != ''">agr_id = #{agrId},</if>
+            <if test="aggrId != null and aggrId != ''">aggr_id = #{aggrId},</if>
             <if test="fwdId != null and fwdId != ''">fwd_id = #{fwdId},</if>
             <if test="orderNum != null">order_num = #{orderNum},</if>
         </trim>
-        where agr_fwd_id = #{agrFwdId}
+        where aggr_fwd_id = #{aggrFwdId}
     </update>
 
     <delete id="deleteInAggregationForwardById" parameterType="String">
-        delete from in_aggregation_forward where agr_fwd_id = #{agrFwdId}
+        delete from in_aggregation_forward where aggr_fwd_id = #{aggrFwdId}
     </delete>
 
     <delete id="deleteInAggregationForwardByIds" parameterType="String">
-        delete from in_aggregation_forward where agr_fwd_id in
-        <foreach item="agrFwdId" collection="array" open="(" separator="," close=")">
-            #{agrFwdId}
+        delete from in_aggregation_forward where aggr_fwd_id in
+        <foreach item="aggrFwdId" collection="array" open="(" separator="," close=")">
+            #{aggrFwdId}
         </foreach>
     </delete>
 

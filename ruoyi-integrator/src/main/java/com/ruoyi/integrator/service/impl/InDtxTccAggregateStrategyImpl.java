@@ -40,7 +40,7 @@ public class InDtxTccAggregateStrategyImpl implements IInAggregateStrategy {
         // 同步、异步
         InAggregation inAggregation = request.getInAggregation();
         if (inAggregation != null){
-            DtxTccAggregateThread dtat = new DtxTccAggregateThread(inAggregation, request.getVarList(), request.getDataList());
+            DtxTccAggregateThread dtat = new DtxTccAggregateThread(inAggregation, request.getVarList(), request.getDataList(), request.getInHttpAuthInfoVo());
             if (Constants.YES.equals(inAggregation.getIsAsync())) {
                 threadPoolTaskExecutor.submit(dtat);
                 ajaxResult = AjaxResult.success("聚合服务["+request.getReqId()+"]提交成功");

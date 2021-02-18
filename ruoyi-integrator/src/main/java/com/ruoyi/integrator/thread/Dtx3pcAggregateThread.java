@@ -56,10 +56,10 @@ public class Dtx3pcAggregateThread implements Callable<AjaxResult> {
 
     @Override
     public AjaxResult call() throws Exception {
-        logger.info("开始处理聚合服务["+inAggregation.getAgrCode()+"] 分布式事务[3PC]...");
+        logger.info("开始处理聚合服务["+inAggregation.getAggrCode()+"] 分布式事务[3PC]...");
         AjaxResult ajaxResult = null;
 
-        logger.info("聚合服务["+inAggregation.getAgrCode()+"] 分布式事务[3PC] 处理结束.");
+        logger.info("聚合服务["+inAggregation.getAggrCode()+"] 分布式事务[3PC] 处理结束.");
         return ajaxResult;
     }
 }

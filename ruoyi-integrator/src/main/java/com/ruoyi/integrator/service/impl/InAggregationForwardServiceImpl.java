@@ -24,13 +24,13 @@ public class InAggregationForwardServiceImpl implements IInAggregationForwardSer
     /**
      * 查询服务聚合关联
      * 
-     * @param agrFwdId 服务聚合关联ID
+     * @param aggrFwdId 服务聚合关联ID
      * @return 服务聚合关联
      */
     @Override
-    public InAggregationForward selectInAggregationForwardById(String agrFwdId)
+    public InAggregationForward selectInAggregationForwardById(String aggrFwdId)
     {
-        return inAggregationForwardMapper.selectInAggregationForwardById(agrFwdId);
+        return inAggregationForwardMapper.selectInAggregationForwardById(aggrFwdId);
     }
 
     /**
@@ -54,7 +54,7 @@ public class InAggregationForwardServiceImpl implements IInAggregationForwardSer
     @Override
     public int insertInAggregationForward(InAggregationForward inAggregationForward)
     {
-        inAggregationForward.setAgrFwdId(IdUtils.fastSimpleUUID());
+        inAggregationForward.setAggrFwdId(IdUtils.fastSimpleUUID());
         return inAggregationForwardMapper.insertInAggregationForward(inAggregationForward);
     }
 
@@ -73,29 +73,29 @@ public class InAggregationForwardServiceImpl implements IInAggregationForwardSer
     /**
      * 批量删除服务聚合关联
      * 
-     * @param agrFwdIds 需要删除的服务聚合关联ID
+     * @param aggrFwdIds 需要删除的服务聚合关联ID
      * @return 结果
      */
     @Override
-    public int deleteInAggregationForwardByIds(String[] agrFwdIds)
+    public int deleteInAggregationForwardByIds(String[] aggrFwdIds)
     {
-        return inAggregationForwardMapper.deleteInAggregationForwardByIds(agrFwdIds);
+        return inAggregationForwardMapper.deleteInAggregationForwardByIds(aggrFwdIds);
     }
 
     /**
      * 删除服务聚合关联信息
      * 
-     * @param agrFwdId 服务聚合关联ID
+     * @param aggrFwdId 服务聚合关联ID
      * @return 结果
      */
     @Override
-    public int deleteInAggregationForwardById(String agrFwdId)
+    public int deleteInAggregationForwardById(String aggrFwdId)
     {
-        return inAggregationForwardMapper.deleteInAggregationForwardById(agrFwdId);
+        return inAggregationForwardMapper.deleteInAggregationForwardById(aggrFwdId);
     }
 
     @Override
-    public List<String> selectInForwardIdListByArgId(String agrId) {
-        return inAggregationForwardMapper.selectInForwardIdListByAgrId(agrId);
+    public List<String> selectInForwardIdListByArgId(String aggrId) {
+        return inAggregationForwardMapper.selectInForwardIdListByAggrId(aggrId);
     }
 }

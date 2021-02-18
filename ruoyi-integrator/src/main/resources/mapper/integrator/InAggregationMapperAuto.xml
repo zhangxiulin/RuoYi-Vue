@@ -5,9 +5,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.integrator.mapper.InAggregationMapper">
     
     <resultMap type="InAggregation" id="InAggregationResult">
-        <result property="agrId"    column="agr_id"    />
-        <result property="agrName"    column="agr_name"    />
-        <result property="agrCode"    column="agr_code"    />
+        <result property="aggrId"    column="aggr_id"    />
+        <result property="aggrName"    column="aggr_name"    />
+        <result property="aggrCode"    column="aggr_code"    />
         <result property="isDtx"    column="is_dtx"    />
         <result property="dtxSolution"    column="dtx_solution"    />
         <result property="isAsync"    column="is_async"    />
@@ -23,14 +23,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectInAggregationVo">
-        select agr_id, agr_name, agr_code, is_dtx, dtx_solution, is_async, execution_order, rt_status_ok, rt_status_error, status, remark, create_by, create_time, update_by, update_time from in_aggregation
+        select aggr_id, aggr_name, aggr_code, is_dtx, dtx_solution, is_async, execution_order, rt_status_ok, rt_status_error, status, remark, create_by, create_time, update_by, update_time from in_aggregation
     </sql>
 
     <select id="selectInAggregationList" parameterType="InAggregation" resultMap="InAggregationResult">
         <include refid="selectInAggregationVo"/>
         <where>  
-            <if test="agrName != null  and agrName != ''"> and agr_name like concat('%', #{agrName}, '%')</if>
-            <if test="agrCode != null  and agrCode != ''"> and agr_code = #{agrCode}</if>
+            <if test="aggrName != null  and aggrName != ''"> and aggr_name like concat('%', #{aggrName}, '%')</if>
+            <if test="aggrCode != null  and aggrCode != ''"> and aggr_code = #{aggrCode}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
         order by create_time desc
@@ -38,15 +38,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <select id="selectInAggregationById" parameterType="String" resultMap="InAggregationResult">
         <include refid="selectInAggregationVo"/>
-        where agr_id = #{agrId}
+        where aggr_id = #{aggrId}
     </select>
         
     <insert id="insertInAggregation" parameterType="InAggregation">
         insert into in_aggregation
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="agrId != null">agr_id,</if>
-            <if test="agrName != null">agr_name,</if>
-            <if test="agrCode != null">agr_code,</if>
+            <if test="aggrId != null">aggr_id,</if>
+            <if test="aggrName != null">aggr_name,</if>
+            <if test="aggrCode != null">aggr_code,</if>
             <if test="isDtx != null">is_dtx,</if>
             <if test="dtxSolution != null">dtx_solution,</if>
             <if test="isAsync != null">is_async,</if>
@@ -61,9 +61,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="agrId != null">#{agrId},</if>
-            <if test="agrName != null">#{agrName},</if>
-            <if test="agrCode != null">#{agrCode},</if>
+            <if test="aggrId != null">#{aggrId},</if>
+            <if test="aggrName != null">#{aggrName},</if>
+            <if test="aggrCode != null">#{aggrCode},</if>
             <if test="isDtx != null">#{isDtx},</if>
             <if test="dtxSolution != null">#{dtxSolution},</if>
             <if test="isAsync != null">#{isAsync},</if>
@@ -82,8 +82,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateInAggregation" parameterType="InAggregation">
         update in_aggregation
         <trim prefix="SET" suffixOverrides=",">
-            <if test="agrName != null">agr_name = #{agrName},</if>
-            <if test="agrCode != null">agr_code = #{agrCode},</if>
+            <if test="aggrName != null">aggr_name = #{aggrName},</if>
+            <if test="aggrCode != null">aggr_code = #{aggrCode},</if>
             <if test="isDtx != null">is_dtx = #{isDtx},</if>
             <if test="dtxSolution != null">dtx_solution = #{dtxSolution},</if>
             <if test="isAsync != null">is_async = #{isAsync},</if>
@@ -97,17 +97,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>
-        where agr_id = #{agrId}
+        where aggr_id = #{aggrId}
     </update>
 
     <delete id="deleteInAggregationById" parameterType="String">
-        delete from in_aggregation where agr_id = #{agrId}
+        delete from in_aggregation where aggr_id = #{aggrId}
     </delete>
 
     <delete id="deleteInAggregationByIds" parameterType="String">
-        delete from in_aggregation where agr_id in 
-        <foreach item="agrId" collection="array" open="(" separator="," close=")">
-            #{agrId}
+        delete from in_aggregation where aggr_id in
+        <foreach item="aggrId" collection="array" open="(" separator="," close=")">
+            #{aggrId}
         </foreach>
     </delete>
     

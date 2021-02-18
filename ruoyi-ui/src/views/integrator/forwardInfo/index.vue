@@ -222,6 +222,19 @@
                 ></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="服务提供方" prop="authSource">
+              <el-select v-model="form.authSource"  filterable >
+                <el-option
+                  v-for="item in appAccessOptions"
+                  :key="item.appId"
+                  :label="item.appKey"
+                  :value="item.appId"
+                >
+                  <span style="float: left">{{ item.appKey }}</span>
+                  <span style="float: right; color: #8492a6; font-size: 13px">{{ item.appEnCode }}</span>
+                </el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item prop="authEnabled">
               <span slot="label">
                 <span>启用认证</span>
@@ -238,24 +251,16 @@
               </el-radio-group>
             </el-form-item>
             <el-form-item label="认证类型" prop="authType">
-              <el-select v-model="queryParams.authType" placeholder="请选择认证类型" clearable size="small">
+              <el-select v-model="form.authType" placeholder="请选择认证类型">
                 <el-option
                   v-for="dict in authTypeOptions"
                   :key="dict.dictValue"
                   :label="dict.dictLabel"
                   :value="dict.dictValue"
-                />
+                ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="认证源" prop="authSource">
-              <el-input
-                v-model="queryParams.authSource"
-                placeholder="请输入认证源"
-                clearable
-                size="small"
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
+
           </el-tab-pane>
           <el-tab-pane label="SQL转发">
             <el-form-item label="SQL" prop="forwardSql">
@@ -297,6 +302,7 @@
 
 <script>
 import { listForwardInfo, getForwardInfo, delForwardInfo, addForwardInfo, updateForwardInfo, exportForwardInfo } from "@/api/integrator/forwardInfo";
+import { listAppAccess, getAppAccess, delAppAccess, addAppAccess, updateAppAccess, exportAppAccess } from "@/api/integrator/appAccess";
 
 export default {
   name: "ForwardInfo",
@@ -374,6 +380,7 @@ export default {
         ],
 
       },
+      appAccessOptions: [],
       form_forwardSql_disabled : false,
       form_forwardDatasource_disabled : false,
       form_forwardUrl_disabled: false,
@@ -382,6 +389,7 @@ export default {
   },
   created() {
     this.getList();
+    this.getAppAccessList();
     this.getDicts("sys_yes_no").then(response => {
       this.isAsyncOptions = response.data;
     });
@@ -408,6 +416,12 @@ export default {
     });
   },
   methods: {
+    /** 查询应用列表 */
+    getAppAccessList() {
+      listAppAccess().then(response => {
+        this.appAccessOptions = response.rows;
+      });
+    },
     /** 查询转发配置列表 */
     getList() {
       this.loading = true;
@@ -440,6 +454,14 @@ export default {
     // 启用状态字典翻译
     statusFormat(row, column) {
       return this.selectDictLabel(this.statusOptions, row.status);
+    },
+    // 认证启用字典翻译
+    authEnabledFormat(row, column) {
+      return this.selectDictLabel(this.authEnabledOptions, row.authEnabled);
+    },
+    // 认证类型字典翻译
+    authTypeFormat(row, column) {
+      return this.selectDictLabel(this.authTypeOptions, row.authType?row.authType:"");
     },
     // 取消按钮
     cancel() {

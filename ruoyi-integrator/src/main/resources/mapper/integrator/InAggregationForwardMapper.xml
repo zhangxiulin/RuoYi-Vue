@@ -4,21 +4,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.integrator.mapper.InAggregationForwardMapper">
 
-    <select id="selectInForwardIdListByAgrId" parameterType="String" resultType="String">
+    <select id="selectInForwardIdListByAggrId" parameterType="String" resultType="String">
         select fwd_id from in_aggregation_forward
-        where agr_id = #{agrId}
+        where aggr_id = #{aggrId}
         order by order_num
     </select>
 
     <insert id="batchInAggregationForward">
-        insert into in_aggregation_forward(agr_fwd_id, agr_id, fwd_id, order_num) values
+        insert into in_aggregation_forward(aggr_fwd_id, aggr_id, fwd_id, order_num) values
         <foreach item="item" index="index" collection="list" separator=",">
-            (#{item.agrFwdId}, #{item.agrId}, #{item.fwdId}, #{item.orderNum})
+            (#{item.aggrFwdId}, #{item.aggrId}, #{item.fwdId}, #{item.orderNum})
         </foreach>
     </insert>
 
-    <delete id="deleteInAggregationForwardByAgrId" parameterType="String">
-        delete from in_aggregation_forward where agr_id = #{agrId}
+    <delete id="deleteInAggregationForwardByAggrId" parameterType="String">
+        delete from in_aggregation_forward where aggr_id = #{aggrId}
     </delete>
     
 </mapper>

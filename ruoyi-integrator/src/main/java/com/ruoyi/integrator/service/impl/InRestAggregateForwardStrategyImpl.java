@@ -32,7 +32,7 @@ public class InRestAggregateForwardStrategyImpl implements IInAggregateForwardSt
     public Object forward(InForwardRequestVo request) {
         logger.info("聚合服务子请求[" + request.getReqId() + "]为HTTP转发请求");
         InForwardInfo inForwardInfo = request.getInForwardInfo();
-        RestForwardSendThread rfst = new RestForwardSendThread(inForwardInfo, request.getVar(), request.getData());
+        RestForwardSendThread rfst = new RestForwardSendThread(inForwardInfo, request.getVar(), request.getData(), request.getInHttpAuthInfoVo(), true);
         return rfst.call();
     }
 
@@ -40,7 +40,7 @@ public class InRestAggregateForwardStrategyImpl implements IInAggregateForwardSt
     public Future<AjaxResult> submitForward(CompletionService completionService, InForwardRequestVo request){
         logger.info("聚合服务子请求[" + request.getReqId() + "]为HTTP转发请求，提交线程...");
         InForwardInfo inForwardInfo = request.getInForwardInfo();
-        RestForwardSendThread rfst = new RestForwardSendThread(inForwardInfo, request.getVar(), request.getData());
+        RestForwardSendThread rfst = new RestForwardSendThread(inForwardInfo, request.getVar(), request.getData(), request.getInHttpAuthInfoVo(),true);
         return completionService.submit(rfst);
     }
 

@@ -16,10 +16,10 @@ public interface InAggregationMapperAuto
     /**
      * 查询服务聚合
      * 
-     * @param agrId 服务聚合ID
+     * @param aggrId 服务聚合ID
      * @return 服务聚合
      */
-    public InAggregation selectInAggregationById(String agrId);
+    public InAggregation selectInAggregationById(String aggrId);
 
     /**
      * 查询服务聚合列表
@@ -48,18 +48,18 @@ public interface InAggregationMapperAuto
     /**
      * 删除服务聚合
      * 
-     * @param agrId 服务聚合ID
+     * @param aggrId 服务聚合ID
      * @return 结果
      */
-    public int deleteInAggregationById(String agrId);
+    public int deleteInAggregationById(String aggrId);
 
     /**
      * 批量删除服务聚合
      * 
-     * @param agrIds 需要删除的数据ID
+     * @param aggrIds 需要删除的数据ID
      * @return 结果
      */
-    public int deleteInAggregationByIds(String[] agrIds);
+    public int deleteInAggregationByIds(String[] aggrIds);
 
-    InAggregation selectInAggregationByCode(String agrCode);
+    InAggregation selectInAggregationByCode(String aggrCode);
 }

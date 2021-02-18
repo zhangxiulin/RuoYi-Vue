@@ -119,15 +119,28 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/appAccess',
+    path: '/appAccessFwd',
     component: Layout,
     hidden: true,
     children: [
       {
         path: 'forward/data/:appId',
         component: (resolve) => require(['@/views/integrator/appAccessForward/index'], resolve),
-        name: 'AppAccessForward',
+        name: 'AppAccessFwd',
         meta: { title: '应用转发权限', icon: '' }
+      }
+    ]
+  },
+  {
+    path: '/appAccessAggr',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'aggr/data/:appId',
+        component: (resolve) => require(['@/views/integrator/appAccessAggr/index'], resolve),
+        name: 'AppAccessAgr',
+        meta: { title: '应用聚合权限', icon: '' }
       }
     ]
   }

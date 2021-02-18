@@ -1,18 +1,18 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="聚合名称" prop="agrName">
+      <el-form-item label="聚合名称" prop="aggrName">
         <el-input
-          v-model="queryParams.agrName"
+          v-model="queryParams.aggrName"
           placeholder="请输入聚合名称"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="聚合编号" prop="agrCode">
+      <el-form-item label="聚合编号" prop="aggrCode">
         <el-input
-          v-model="queryParams.agrCode"
+          v-model="queryParams.aggrCode"
           placeholder="请输入聚合编号"
           clearable
           size="small"
@@ -79,9 +79,9 @@
 
     <el-table v-loading="loading" :data="aggregationList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <!--<el-table-column label="主键ID" align="center" prop="agrId" />-->
-      <el-table-column label="聚合名称" align="center" prop="agrName" />
-      <el-table-column label="聚合编号" align="center" prop="agrCode" />
+      <!--<el-table-column label="主键ID" align="center" prop="aggrId" />-->
+      <el-table-column label="聚合名称" align="center" prop="aggrName" />
+      <el-table-column label="聚合编号" align="center" prop="aggrCode" />
       <el-table-column label="分布式事务" align="center" prop="isDtx" :formatter="isDtxFormat" />
       <el-table-column label="事务方案" align="center" prop="dtxSolution" :formatter="dtxSolutionOptionsFormat" />
       <el-table-column label="是否异步" align="center" prop="isAsync" :formatter="isAsyncFormat" />
@@ -121,11 +121,11 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-tabs tab-position="left" style="height: 400px;">
           <el-tab-pane label="基础配置">
-            <el-form-item label="聚合名称" prop="agrName">
-              <el-input v-model="form.agrName" placeholder="请输入聚合服务名称" />
+            <el-form-item label="聚合名称" prop="aggrName">
+              <el-input v-model="form.aggrName" placeholder="请输入聚合服务名称" />
             </el-form-item>
-            <el-form-item label="聚合编号" prop="agrCode">
-              <el-input v-model="form.agrCode" placeholder="请输入聚合服务编号" />
+            <el-form-item label="聚合编号" prop="aggrCode">
+              <el-input v-model="form.aggrCode" placeholder="请输入聚合服务编号" />
             </el-form-item>
             <el-form-item label="是否异步">
               <el-radio-group v-model="form.isAsync">
@@ -252,18 +252,18 @@
         queryParams: {
           pageNum: 1,
           pageSize: 10,
-          agrName: null,
-          agrCode: null,
+          aggrName: null,
+          aggrCode: null,
           status: null,
         },
         // 表单参数
         form: {},
         // 表单校验
         rules: {
-          agrName: [
+          aggrName: [
             { required: true, message: "聚合名称不能为空", trigger: "blur" }
           ],
-          agrCode: [
+          aggrCode: [
             { required: true, message: "聚合编号不能为空", trigger: "blur" }
           ],
           isDtx: [
@@ -335,9 +335,9 @@
       // 表单重置
       reset() {
         this.form = {
-          agrId: null,
-          agrName: null,
-          agrCode: null,
+          aggrId: null,
+          aggrName: null,
+          aggrCode: null,
           isDtx: "Y",
           dtxSolution: null,
           isAsync: "N",
@@ -367,7 +367,7 @@
       },
       // 多选框选中数据
       handleSelectionChange(selection) {
-        this.ids = selection.map(item => item.agrId)
+        this.ids = selection.map(item => item.aggrId)
         this.single = selection.length!==1
         this.multiple = !selection.length
       },
@@ -383,8 +383,8 @@
       /** 修改按钮操作 */
       handleUpdate(row) {
         this.reset();
-        const agrId = row.agrId || this.ids
-        getAggregation(agrId).then(response => {
+        const aggrId = row.aggrId || this.ids
+        getAggregation(aggrId).then(response => {
           this.forwardOptions = response.forwardInfos;
           this.form = response.data;
           this.form.forwardIds = response.forwardIds;
@@ -397,7 +397,7 @@
       submitForm() {
         this.$refs["form"].validate(valid => {
           if (valid) {
-            if (this.form.agrId != null) {
+            if (this.form.aggrId != null) {
               updateAggregation(this.form).then(response => {
                 this.msgSuccess("修改成功");
               this.open = false;
@@ -415,13 +415,13 @@
       },
       /** 删除按钮操作 */
       handleDelete(row) {
-        const agrIds = row.agrId || this.ids;
-        this.$confirm('是否确认删除服务聚合编号为"' + agrIds + '"的数据项?', "警告", {
+        const aggrIds = row.aggrId || this.ids;
+        this.$confirm('是否确认删除服务聚合编号为"' + aggrIds + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return delAggregation(agrIds);
+          return delAggregation(aggrIds);
         }).then(() => {
           this.getList();
         this.msgSuccess("删除成功");
