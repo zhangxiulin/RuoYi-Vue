@@ -19,6 +19,7 @@ import com.ruoyi.integrator.enums.InForwardType;
 import com.ruoyi.integrator.service.ITransactionCoordinator;
 import com.ruoyi.integrator.service.InAggregateForwardContext;
 import com.ruoyi.integrator.thread.RestForwardSendThread;
+import com.ruoyi.integrator.utils.AggregateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -125,8 +126,8 @@ public class TransactionCoordinatorImpl implements ITransactionCoordinator {
                     }
                 }
                 // 移除httpAuthInfo
-                if (confirmAjaxResult.containsKey(RestForwardSendThread.KEY_IN_HTTP_AUTH_INFO)) {
-                    confirmAjaxResult.remove(RestForwardSendThread.KEY_IN_HTTP_AUTH_INFO);
+                if (confirmAjaxResult.containsKey(AggregateUtils.KEY_TRANSIENT_IN_HTTP_AUTH_INFO)) {
+                    confirmAjaxResult.remove(AggregateUtils.KEY_TRANSIENT_IN_HTTP_AUTH_INFO);
                 }
             }
 

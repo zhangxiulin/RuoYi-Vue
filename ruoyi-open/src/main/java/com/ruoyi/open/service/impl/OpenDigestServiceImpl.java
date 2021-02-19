@@ -79,17 +79,22 @@ public class OpenDigestServiceImpl implements IOpenDigestService {
                 HashMap<String, String> authFields = splitAuthFields(authorization.substring(7));
                 String newResponse = authFields.get(RESPONSE);
                 String username = authFields.get(USERNAME);
+                String password = getPasswordOfAppAccess(username);
                 String A1 = calcDigest(username, authFields.get(REALM),
                         getPasswordOfAppAccess(username));//A1 = MD5("usarname:realm:password");
-                String A2 = calcDigest(httpServletRequest.getMethod(), authFields.get(URI));//A2 = MD5("httpmethod:uri");
+                log.info("A1 = MD5(\"usarname:realm:password\") , {}:{}:{}", username, realm, password);
+                String httpMethod = httpServletRequest.getMethod();
+                String uri = authFields.get(URI);
+                String A2 = calcDigest(httpMethod, authFields.get(URI));//A2 = MD5("httpmethod:uri");
+                log.info("A2 = MD5(\"httpmethod:uri\") , {}:{}", httpMethod, uri);
                 String oriResponse = calcDigest(A1, authFields.get(NONCE), authFields.get(NC), authFields.get(CNONCE),
                         authFields.get(QOP), A2); //response = MD5("A1:nonce:nc:cnonce:qop:A2");
                 if (oriResponse.equals(newResponse)) {
                     httpResponse.setStatus(HttpStatus.SC_OK);
-                    log.info("Digest认证成功，username[" + username + "]");
+                    log.info("Digest认证成功，username[" + username + "] " + "uri[" + uri + "] method[" +httpMethod + "]" );
                     return HttpStatus.SC_OK;
                 } else {
-                    log.info("Digest认证失败，username[" + username + "]");
+                    log.info("Digest认证失败，username[" + username + "] " + "uri[" + uri + "] method[" +httpMethod + "]");
                     httpResponse.setStatus(HttpStatus.SC_UNAUTHORIZED);
                     return HttpStatus.SC_UNAUTHORIZED;
                 }

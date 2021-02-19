@@ -46,6 +46,8 @@ public class HttpDigestRequestUtils {
      */
     public static String sendDelete(String url, String param, String username, String password, String json, String type) {
 
+        logger.info("sendDelete - url:{} param:{} username:{} password:{} json:{} type:{}", url, param, username, password, json, type);
+
         StringBuilder result = new StringBuilder();
         BufferedReader in = null;
         try {
@@ -120,6 +122,8 @@ public class HttpDigestRequestUtils {
      * @return URL                                     所代表远程资源的响应结果
      */
     public static String sendPut(String url, String param, String username, String password, String json, String type) {
+
+        logger.info("sendPut - url:{} param:{} username:{} password:{} json:{} type:{}", url, param, username, password, json, type);
 
         StringBuilder result = new StringBuilder();
         BufferedReader in = null;
@@ -196,6 +200,8 @@ public class HttpDigestRequestUtils {
      */
     public static String sendPost(String url, String param, String username, String password, String json, String type) {
 
+        logger.info("sendPost - url:{} param:{} username:{} password:{} json:{} type:{}", url, param, username, password, json, type);
+
         StringBuilder result = new StringBuilder();
         BufferedReader in = null;
         try {
@@ -269,6 +275,8 @@ public class HttpDigestRequestUtils {
      * @return URL 所代表远程资源的响应结果
      */
     public static String sendGet(String url, String param, String username, String password, String type) {
+
+        logger.info("sendGet - url:{} param:{} username:{} password:{} type:{}", url, param, username, password, type);
 
         StringBuilder result = new StringBuilder();
         BufferedReader in = null;

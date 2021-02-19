@@ -38,6 +38,7 @@ import java.util.concurrent.Callable;
  * @author: zhangxiulin
  * @time: 2020/12/27 22:59
  */
+@Deprecated
 public class Dtx3pcAggregateThread implements Callable<AjaxResult> {
 
     private static final Logger logger = LoggerFactory.getLogger(Dtx3pcAggregateThread.class);

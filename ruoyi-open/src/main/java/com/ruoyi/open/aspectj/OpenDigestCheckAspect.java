@@ -16,6 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+
 /**
  * @description: 检验http digest认证是否通过切面
  * @author: zhangxiulin
@@ -40,16 +43,29 @@ public class OpenDigestCheckAspect {
     }
 
     protected Object handleOpenDigestCheck(ProceedingJoinPoint point) throws Throwable {
+        MethodSignature methodSignature = (MethodSignature) point.getSignature();
         IOpenDigestService digestService = SpringUtils.getBean(IOpenDigestService.class);
         int authRt = digestService.auth(ServletUtils.getRequest(), ServletUtils.getResponse());
+        Method invokedMethod = methodSignature.getMethod();
+        String invokedMethodName = invokedMethod.getName();
+        Annotation[] declaredAnnotations = invokedMethod.getDeclaredAnnotations();
+        StringBuilder declaredAnnotationSb = new StringBuilder();
+        if (declaredAnnotations != null && declaredAnnotations.length > 0){
+            for (int i = 0; i < declaredAnnotations.length; i++) {
+                declaredAnnotationSb.append(declaredAnnotations[i].toString()).append(",");
+            }
+        }
+        String declaredAnnotationStr = "";
+        if (declaredAnnotationSb.length() > 0) {
+            declaredAnnotationStr = declaredAnnotationSb.substring(0, declaredAnnotationSb.length()-1);
+        }
         if (authRt == HttpStatus.SUCCESS) {
-            log.info("认证成功");
+            log.info("认证成功, 切点：{} 注解：{}", invokedMethodName, declaredAnnotationStr);
             return point.proceed();
         } else {
-            log.error("认证失败");
+            log.error("认证失败, 切点：{} 注解：{}", invokedMethodName, declaredAnnotationStr);
             // 先判断注解内有没有指定返回值和返回值类型，若未指定，以默认
-            MethodSignature methodSignature = (MethodSignature) point.getSignature();
-            OpenDigestCheck odcAnnotation = methodSignature.getMethod().getAnnotation(OpenDigestCheck.class);
+            OpenDigestCheck odcAnnotation = invokedMethod.getAnnotation(OpenDigestCheck.class);
             Class odcRtType = odcAnnotation.rtType();
             String odcRtErrValue = odcAnnotation.rtErrValue();
             if (odcRtType != void.class && !"".equals(odcRtErrValue)) {

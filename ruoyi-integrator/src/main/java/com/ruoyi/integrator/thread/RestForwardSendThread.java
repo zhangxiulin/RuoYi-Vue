@@ -15,6 +15,7 @@ import com.ruoyi.integrator.domain.vo.InHttpAuthInfoVo;
 import com.ruoyi.integrator.enums.InForwardMethod;
 import com.ruoyi.integrator.enums.InForwardProtocol;
 import com.ruoyi.integrator.service.IInAppAccessService;
+import com.ruoyi.integrator.utils.AggregateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,14 +42,11 @@ public class RestForwardSendThread implements Callable<AjaxResult> {
 
     private static final String KEY_PASSWORD = "password";
 
-    public static final String KEY_IN_HTTP_AUTH_INFO = "httpAuthInfo";
-
     /**认证信息**/
     private InHttpAuthInfoVo inHttpAuthInfoVo = new InHttpAuthInfoVo();
 
     private boolean rtHttpAuthInfo;
 
-    private InHttpAuthInfoVo newInHttpAuthInfoVo;
     /**认证信息**/
 
     public RestForwardSendThread(InForwardInfo inForwardInfo, Map<String, Object> sendVar, Map<String, Object> sendData){
@@ -75,6 +73,7 @@ public class RestForwardSendThread implements Callable<AjaxResult> {
     @Override
     public AjaxResult call() {
         AjaxResult result = null;
+        InHttpAuthInfoVo newInHttpAuthInfoVo = new InHttpAuthInfoVo();
         logger.info("开始处理[REST]转发服务...");
         if (inForwardInfo != null){
             // 区分协议，目前只支持http
@@ -380,7 +379,7 @@ public class RestForwardSendThread implements Callable<AjaxResult> {
         logger.info("转发发送服务结束.");
 
         if (rtHttpAuthInfo) {
-            result.put(KEY_IN_HTTP_AUTH_INFO, newInHttpAuthInfoVo);
+            result.put(AggregateUtils.KEY_TRANSIENT_IN_HTTP_AUTH_INFO, newInHttpAuthInfoVo);
         }
 
         return result;

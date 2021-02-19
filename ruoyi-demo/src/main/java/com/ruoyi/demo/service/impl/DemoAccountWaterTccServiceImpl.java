@@ -236,7 +236,7 @@ public class DemoAccountWaterTccServiceImpl implements IDemoAccountWaterTccServi
         int uCount = this.demoAccountWaterTccMapper.updateDemoAccountWaterTcc(demoAccountWaterTcc);
         if (uCount > 0){
             String msg = "取消成功";
-            log.error(msg + "，流水号[" + serialNumber + "]");
+            log.info(msg + "，流水号[" + serialNumber + "]");
             ajaxResult = new AjaxResult(HttpStatus.SUCCESS, msg );
         } else {
             String msg = "取消失败";

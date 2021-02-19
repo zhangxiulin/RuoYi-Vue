@@ -20,6 +20,7 @@ import com.ruoyi.integrator.enums.InForwardProtocol;
 import com.ruoyi.integrator.enums.InForwardType;
 import com.ruoyi.integrator.service.ITransactionCoordinator;
 import com.ruoyi.integrator.service.InAggregateForwardContext;
+import com.ruoyi.integrator.utils.AggregateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,35 +64,34 @@ public class DtxTccAggregateThread implements Callable<AjaxResult> {
         List<InForwardInfo> forwardInfoList = inAggregation.getForwardInfoList();
         List<AjaxResult> fwdAjaxResultList = new ArrayList<>();
         if (forwardInfoList != null && forwardInfoList.size() > 0) {
+            int forwardSize = forwardInfoList.size();
             if (ExecutionOrder.SEQUENCE.getCode().equals(inAggregation.getExecutionOrder())) { // 顺序执行
                 logger.info("聚合服务["+inAggregation.getAggrCode()+"]顺序执行");
-                for (int i=0,len=forwardInfoList.size(); i<len; i++){
+                for (int i=0,len=forwardSize; i<len; i++){
                     InForwardInfo inForwardInfo = forwardInfoList.get(i);
-                    Map<String, Object> sendVar = new HashMap<>();
-                    if (sendVarList != null && sendVarList.size() == forwardInfoList.size()) {
-                        sendVar = (Map<String, Object>) sendVarList.get(i);
-                    }
-                    Object sendData = sendDataList.get(i);
-                    InForwardRequestVo inForwardRequestVo = new InForwardRequestVo();
-                    inForwardRequestVo.setReqId(inForwardInfo.getForwardCode());
-                    inForwardRequestVo.setInForwardInfo(inForwardInfo);
-                    inForwardRequestVo.setVar(sendVar);
-                    inForwardRequestVo.setInHttpAuthInfoVo(inHttpAuthInfoVo);
-                    if (sendData instanceof List){
-                        inForwardRequestVo.setDataList((List)sendData);
-                    } else {
-                        inForwardRequestVo.setData((Map) sendData);
-                    }
                     InAggregateForwardContext inForwardContext = SpringUtils.getBean(InAggregateForwardContext.class);
                     InForwardType forwardType = InForwardType.valueOf(inForwardInfo.getForwardType());
                     if (forwardType != null){
-                        AjaxResult fwdAjaxResult = inForwardContext.forward(forwardType, inForwardRequestVo);
+                        AjaxResult fwdAjaxResult = inForwardContext.forward(forwardType, AggregateUtils.genInForwardRequestVo(inForwardInfo, inHttpAuthInfoVo, forwardSize, i, sendVarList, sendDataList));
                         fwdAjaxResultList.add(fwdAjaxResult);
                     }
                 }
-
             } else {    // 并行执行
-
+                logger.info("聚合服务["+inAggregation.getAggrCode()+"]并行执行");
+                ExecutorService executorService = new ThreadPoolExecutor(forwardSize, forwardSize, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingDeque<>());
+                CompletionService completionService = new ExecutorCompletionService(executorService);
+                for (int i=0,len=forwardSize; i<len; i++){
+                    InForwardInfo inForwardInfo = forwardInfoList.get(i);
+                    InAggregateForwardContext inForwardContext = SpringUtils.getBean(InAggregateForwardContext.class);
+                    InForwardType forwardType = InForwardType.valueOf(inForwardInfo.getForwardType());
+                    if (forwardType != null){
+                        inForwardContext.submitForward(completionService, forwardType, AggregateUtils.genInForwardRequestVo(inForwardInfo, inHttpAuthInfoVo, forwardSize, i, sendVarList, sendDataList));
+                    }
+                }
+                for (int i=0; i<forwardSize; i++){
+                    AjaxResult fwdAjaxResult = (AjaxResult) completionService.take().get();
+                    fwdAjaxResultList.add(fwdAjaxResult);
+                }
             }
             // 判断总结果，全部try成功，进行确认操作；否则进行取消操作
             boolean rtAggr = true;
@@ -121,21 +121,20 @@ public class DtxTccAggregateThread implements Callable<AjaxResult> {
                     }
                 }
 
-                rtInHttpAuthInfoVoList.add((InHttpAuthInfoVo) fwdAjaxResult.get(RestForwardSendThread.KEY_IN_HTTP_AUTH_INFO));
+                rtInHttpAuthInfoVoList.add((InHttpAuthInfoVo) fwdAjaxResult.get(AggregateUtils.KEY_TRANSIENT_IN_HTTP_AUTH_INFO));
                 // 移除httpAuthInfo
-                if (fwdAjaxResult.containsKey(RestForwardSendThread.KEY_IN_HTTP_AUTH_INFO)) {
-                    fwdAjaxResult.remove(RestForwardSendThread.KEY_IN_HTTP_AUTH_INFO);
-                }
+                AggregateUtils.removeHttpAuthInfo(fwdAjaxResult);
             }
             // 确认
             if (rtAggr) {
                 String msg = "尝试阶段参与者全部成功，进行确认...";
-                logger.info(msg, fwdAjaxResultList);
+                AjaxResult triedAjaxResult = AjaxResult.success("所有参与者尝试成功", fwdAjaxResultList);
+                logger.info(msg, triedAjaxResult);
                 ITransactionCoordinator transactionCoordinator = SpringUtils.getBean(ITransactionCoordinator.class);
                 // 根据当前认证方案决定接下来的认证方案
                 AjaxResult confirmedAjaxResult = transactionCoordinator.confirm(fwdAjaxResultList, rtInHttpAuthInfoVoList);
                 Map<String, Object> tccStageRt = new HashMap<>();
-                tccStageRt.put(TccStage.TRIED.name().toLowerCase(), fwdAjaxResultList);
+                tccStageRt.put(TccStage.TRIED.name().toLowerCase(), triedAjaxResult);
                 tccStageRt.put(TccStage.CONFIRMED.name().toLowerCase(), confirmedAjaxResult);
                 if (confirmedAjaxResult != null) {
                     switch ((int)confirmedAjaxResult.get(AjaxResult.CODE_TAG)){
@@ -182,4 +181,6 @@ public class DtxTccAggregateThread implements Callable<AjaxResult> {
         logger.info("聚合服务["+inAggregation.getAggrCode()+"] 分布式事务[TCC] 处理结束.");
         return ajaxResult;
     }
+
+
 }

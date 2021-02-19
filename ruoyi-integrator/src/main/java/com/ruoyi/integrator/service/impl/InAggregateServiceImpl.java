@@ -176,7 +176,7 @@ public class InAggregateServiceImpl implements IInAggregateService {
             } else {
                 log.info("聚合服务["+request.getReqId()+"]无需分布式事务支持");
                 // 判断异步
-                NoneDtxAggregateThread ndat = new NoneDtxAggregateThread(inAggregation, request.getVarList(), request.getDataList());
+                NoneDtxAggregateThread ndat = new NoneDtxAggregateThread(inAggregation, request.getVarList(), request.getDataList(), request.getInHttpAuthInfoVo());
                 if (Constants.YES.equals(inAggregation.getIsAsync())){  // 异步
                     threadPoolTaskExecutor.submit(ndat);
                     ajaxResult = AjaxResult.success("聚合服务["+request.getReqId()+"]提交成功");
